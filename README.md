@@ -2,6 +2,8 @@
 
 Pipeline para generar y publicar **alt-text evocativo** en las fotos de [@HispaniaObscura en Pixelfed](https://pixelfed.social/HispaniaObscura), y servir un sitio estático rico crawlable en [`fotos.impermanente.es`](https://fotos.impermanente.es/).
 
+> 🤖 **Para asistentes IA / sesiones futuras:** leer **[AGENTS.md](./AGENTS.md)** primero. Ahí está el runbook operativo completo (qué hacer cuando JR sube fotos nuevas, quirks de Pixelfed, troubleshooting, anatomía de los datos).
+
 ## ¿Qué hace?
 
 1. **Lee Pixelfed** y construye un inventario de cada foto (`scripts/fetch_inventory.py`).
