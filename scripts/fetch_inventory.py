@@ -54,7 +54,7 @@ def fetch_all_statuses(instance: str, account_id: str, token: str) -> list[dict]
     headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
     url = f"https://{instance}/api/v1/accounts/{account_id}/statuses"
     while True:
-        params = {"limit": PER_PAGE, "exclude_replies": "true", "exclude_reblogs": "true"}
+        params = {"limit": PER_PAGE, "exclude_replies": "true", "exclude_reblogs": "true", "_pe": "1"}
         if max_id:
             params["max_id"] = max_id
         page: list[dict] | None = None
