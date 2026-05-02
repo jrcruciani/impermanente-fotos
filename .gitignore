@@ -1,0 +1,21 @@
+# Build artifacts
+output/
+*.tmp
+*.tmp.*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+*.egg-info/
+
+# OS
+.DS_Store
+
+# Heavy local cache (28MB de fotos optimizadas; se regeneran con fetch_inventory.py)
+data/images_cache/
+
+# Local notes / scratch
+.scratch/
+*.local.md
