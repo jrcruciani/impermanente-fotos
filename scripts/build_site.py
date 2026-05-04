@@ -191,290 +191,259 @@ def photo_url(status_id: str) -> str:
 # ---------- Templates ----------
 
 CSS = """
-@font-face {
-  font-family: "GTW";
-  font-display: swap;
-  src: url('https://impermanente.es/fonts/GT-W-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-}
-@font-face {
-  font-family: "GTW";
-  font-display: swap;
-  src: url('https://impermanente.es/fonts/GT-W-Regular-Oblique.woff2') format('woff2');
-  font-weight: 400;
-  font-style: italic;
-}
-@font-face {
-  font-family: "GTW";
-  font-display: swap;
-  src: url('https://impermanente.es/fonts/GT-W-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-}
-@font-face {
-  font-family: "GTW";
-  font-display: swap;
-  src: url('https://impermanente.es/fonts/GT-W-Bold-Oblique.woff2') format('woff2');
-  font-weight: 700;
-  font-style: italic;
-}
-:root {
-  --bg: #fafafa;
-  --bg-elev: #fff;
-  --fg: #222;
-  --fg-soft: #555;
-  --fg-soft2: #888;
-  --rule: rgba(0,0,0,.12);
-  --link: #2a4d8f;
-  --photo-border: #fff;
-  --photo-outline: #000;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #14171c;
-    --bg-elev: #1a1f27;
-    --fg: #ececec;
-    --fg-soft: #bbb;
-    --fg-soft2: #888;
-    --rule: rgba(255,255,255,.12);
-    --link: #93b8ff;
-    --photo-border: #000;
-    --photo-outline: #fff;
-  }
-}
-* { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
-body {
-  font-family: "GTW", -apple-system, system-ui, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background: var(--bg);
-  color: var(--fg);
-  margin: 0;
-  line-height: 1.55;
-}
-a { color: var(--link); text-decoration: none; }
-a:hover { text-decoration: underline; }
-.header {
-  border-bottom: 1px solid var(--rule);
-  background: var(--bg-elev);
-}
-.site-nav {
-  max-width: 980px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 14px 1rem;
-  flex-wrap: wrap;
-}
-.site-title {
-  margin: 0;
-  font-size: 1.15rem;
-  font-weight: 700;
-}
-.site-title a {
-  color: var(--fg);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.site-title img {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-}
-.nav-menu {
-  list-style: none;
-  display: flex;
-  gap: 1rem;
-  margin: 0;
-  padding: 0;
-  font-size: .95rem;
-  flex-wrap: wrap;
-}
-.nav-menu a { color: var(--fg-soft); }
-.nav-menu a.current { color: var(--fg); font-weight: 600; }
+/* === impermanente fotos: overrides al theme Magnum del blog ===
+   Los stylesheets del blog (fonts.css, main.css, photos-masonry.css, custom.css)
+   se cargan via <link> en head() y aportan: tipografía Lora+Inter,
+   variables de color (--bg, --text, --heading, --serif, --sans, --accent,
+   --separator, --caption, --muted, --footer-bg, --footer-text), header
+   styling (.header, .site-nav, .site-title, .u-photo, .nav-menu, .nav-item),
+   footer negro y tokens de spacing. Aquí solo definimos lo único de la
+   galería. */
+
+/* Galería más ancha que el ancho de texto del blog */
 main {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 2rem 1rem 4rem;
+  max-width: var(--header-width, 94rem);
+  padding: 60px var(--gutter, 24px) 40px;
 }
+
+/* Texto introductorio centrado, en serif del blog */
 .page-intro {
-  max-width: 680px;
-  margin: 0 auto 2rem auto;
+  font-family: var(--serif);
+  font-size: 1.7rem;
+  font-weight: var(--weight-light, 300);
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+  color: var(--text);
   text-align: center;
-  color: var(--fg-soft);
-  font-size: 1.05rem;
-  line-height: 1.7;
+  max-width: var(--text-width, 620px);
+  margin: 0 auto 30px;
 }
+
 .section-divider {
-  width: 72px;
-  margin: 2rem auto 2.4rem auto;
-  border: 0;
-  border-top: 1px solid var(--rule);
+  border: none;
+  border-top: 1px solid var(--separator);
+  max-width: 60px;
+  margin: 40px auto;
 }
-h1, h2, h3 {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  letter-spacing: .3px;
-}
-h1 { font-size: 1.7rem; margin: 0 0 1rem; }
+
 h2.section-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 2rem 0 1rem;
-  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 2rem;
+  font-weight: var(--weight-light, 300);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--heading);
+  text-align: center;
+  margin: 60px 0 30px;
 }
+
+/* === Colecciones (grid superior) === */
 .collections-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 2px;
+  margin-bottom: 40px;
 }
 .collection-card {
   position: relative;
   display: block;
   overflow: hidden;
-  border-radius: 8px;
-  text-decoration: none;
+  border-radius: 0;
   aspect-ratio: 1;
+  text-decoration: none;
 }
 .collection-card img {
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform .3s ease;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  transition: transform 0.4s ease;
 }
-.collection-card:hover img { transform: scale(1.05); }
+.collection-card:hover img { transform: scale(1.04); }
 .collection-name {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  padding: 24px 10px 10px;
-  background: linear-gradient(transparent, rgba(0,0,0,.65));
+  padding: 24px 14px 12px;
+  background: linear-gradient(transparent, rgba(0,0,0,.7));
   color: #fff;
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-family: var(--sans);
+  font-size: 1.4rem;
+  font-weight: var(--weight-medium, 500);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 @media (max-width: 600px) {
   .collections-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* === Galería de fotos (lista vertical, full-bleed estilo Magnum) === */
 .gallery {
-  margin: 1rem auto 2rem;
+  margin: 30px 0;
 }
 .gallery-item {
-  margin-bottom: 30px;
+  margin-bottom: 80px;
 }
 .gallery-item a {
-  text-decoration: none;
-  color: var(--fg);
   display: block;
+  color: var(--text);
+  text-decoration: none;
 }
 .gallery-item img {
-  width: calc(100% - 10px);
-  margin: 5px;
-  display: block;
-  border: 5px solid var(--photo-border);
-  outline: 5px solid var(--photo-outline);
-  outline-offset: 0;
-  box-shadow: none;
+  width: 100%;
   height: auto;
+  display: block;
+  border-radius: 0 !important;
+  margin: 0 !important;
 }
-.gallery-item:hover { opacity: .85; }
+.gallery-item:hover img {
+  opacity: 0.92;
+  transition: opacity 0.2s ease;
+}
+
 .photo-info {
-  margin-top: 10px;
+  padding: 16px 0 0;
+  max-width: var(--text-width, 620px);
+  margin: 0 auto;
 }
 .photo-caption {
-  font-size: .98rem;
-  color: var(--fg-soft);
-  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: var(--weight-light, 300);
+  line-height: 1.5;
+  color: var(--text);
+  margin: 0 0 10px;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 .photo-meta-line {
-  display: block;
-  font-size: .8rem;
-  color: var(--fg-soft2);
-  margin-top: 5px;
+  font-family: var(--sans);
+  font-size: 1.1rem;
+  font-weight: var(--weight-normal, 400);
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  color: var(--muted);
+  display: block;
 }
-.photo-meta-line .photo-place { color: var(--fg-soft); }
+.photo-meta-line .photo-place {
+  color: var(--caption);
+}
+
+/* === Paginación (estilo Magnum) === */
 .pagination {
   display: flex;
   justify-content: center;
-  gap: .5rem;
-  margin: 2rem 0 1rem;
+  gap: 8px;
+  margin: 60px 0 30px;
+  font-family: var(--sans);
+  font-size: 1.2rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   flex-wrap: wrap;
-  font-size: .95rem;
 }
 .pagination a, .pagination span {
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid var(--rule);
-  color: var(--fg-soft);
+  padding: 10px 16px;
+  border: 1px solid var(--separator);
+  color: var(--muted);
   text-decoration: none;
+  border-radius: 0;
+  transition: color 0.2s ease, border-color 0.2s ease;
 }
-.pagination a:hover { background: var(--bg-elev); color: var(--fg); }
+.pagination a:hover {
+  color: var(--heading);
+  border-color: var(--heading);
+}
 .pagination .current {
-  background: var(--fg);
+  background: var(--heading);
   color: var(--bg);
-  border-color: var(--fg);
+  border-color: var(--heading);
 }
+
+/* === CTA Pixelfed (botón Magnum) ===
+   El blog define .btn-pixelfed con !important; con este selector más
+   específico evitamos pisarlo, pero si llegara a pisarse el resultado
+   visual sería el mismo. */
 .pixelfed-cta {
   text-align: center;
-  margin: 2rem 0;
+  margin: 60px 0;
 }
-.btn-pixelfed {
-  display: inline-block;
-  padding: 12px 24px;
-  background: #6366f1;
-  color: #fff !important;
-  border-radius: 8px;
-  font-weight: 600;
-  text-decoration: none;
+
+/* === Página individual de foto === */
+body.photo-page main {
+  max-width: var(--header-width, 94rem);
 }
-.btn-pixelfed:hover { background: #4f46e5; }
-footer {
-  border-top: 1px solid var(--rule);
-  padding: 2rem 1rem;
-  font-size: .85rem;
-  color: var(--fg-soft2);
-  text-align: center;
-}
-footer a { color: var(--fg-soft); }
-.photo-page main { max-width: 920px; }
 .photo-page .photo-hero {
-  margin: 0 0 1.5rem;
+  margin: 0 0 30px;
   text-align: center;
 }
 .photo-page .photo-hero img {
   max-width: 100%;
   height: auto;
-  border: 5px solid var(--photo-border);
-  outline: 5px solid var(--photo-outline);
+  border-radius: 0 !important;
+  margin: 0 !important;
 }
 .photo-page .photo-text {
-  font-size: 1.05rem;
-  line-height: 1.7;
-  color: var(--fg);
-  margin: 1.5rem 0;
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  font-weight: var(--weight-light, 300);
+  line-height: 1.55;
+  letter-spacing: 0.3px;
+  color: var(--text);
+  max-width: var(--text-width, 620px);
+  margin: 30px auto;
 }
 .photo-page .photo-meta {
-  font-size: .9rem;
-  color: var(--fg-soft);
-  margin-bottom: 2rem;
+  font-family: var(--sans);
+  font-size: 1.2rem;
+  font-weight: var(--weight-normal, 400);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  margin: 0 auto 40px;
+  max-width: var(--text-width, 620px);
 }
-.photo-page .photo-meta a { color: var(--fg-soft); border-bottom: 1px dotted; }
+.photo-page .photo-meta a {
+  color: var(--accent);
+  text-decoration: none;
+  border: none;
+}
+.photo-page .photo-meta a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
 .photo-page .photo-prev-next {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
-  font-size: .92rem;
+  gap: 20px;
+  margin: 80px auto 0;
+  padding-top: 30px;
+  border-top: 1px solid var(--separator);
+  font-family: var(--sans);
+  font-size: 1.2rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  max-width: var(--text-width, 620px);
 }
-.photo-page .photo-prev-next a { color: var(--fg-soft); }
+.photo-page .photo-prev-next a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.photo-page .photo-prev-next a:hover {
+  color: var(--heading);
+}
+
+/* === Mobile === */
+@media (max-width: 768px) {
+  main { padding: 40px 16px 30px; }
+  .gallery-item { margin-bottom: 50px; }
+  .photo-caption { font-size: 1.5rem; }
+  .photo-page .photo-text { font-size: 1.7rem; }
+  h2.section-title { font-size: 1.7rem; }
+}
 """
 
 
@@ -495,10 +464,10 @@ def head(title: str, description: str, canonical: str, og_image: str | None = No
 <meta name="author" content="{esc(AUTHOR_NAME)}">
 <meta name="color-scheme" content="light dark">
 <link rel="canonical" href="{esc(canonical)}">
-<link rel="preload" href="{PARENT_URL}/fonts/GT-W-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="{PARENT_URL}/fonts/GT-W-Regular-Oblique.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="{PARENT_URL}/fonts/GT-W-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="{PARENT_URL}/fonts/GT-W-Bold-Oblique.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload stylesheet" as="style" href="{PARENT_URL}/css/fonts.css">
+<link rel="preload stylesheet" as="style" href="{PARENT_URL}/css/main.css">
+<link rel="preload stylesheet" as="style" href="{PARENT_URL}/css/photos-masonry.css">
+<link rel="preload stylesheet" as="style" href="{PARENT_URL}/custom.css">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(description)}">
 <meta property="og:url" content="{esc(canonical)}">
@@ -516,17 +485,17 @@ def head(title: str, description: str, canonical: str, og_image: str | None = No
 <body class="{esc(body_class)}">
 <header class="header">
   <nav class="site-nav">
-    <h1 class="site-title"><a href="{PARENT_URL}/">
-      <img src="https://avatars.micro.blog/avatars/2025/36/1810674.jpg" alt="" width="28" height="28">impermanente
+    <h1 class="site-title"><a href="{PARENT_URL}/" class="u-url">
+      <img src="https://avatars.micro.blog/avatars/2025/36/1810674.jpg" alt="" class="u-photo" id="avatar" width="28" height="28">impermanente
     </a></h1>
     <ul class="nav-menu">
-      <li><a href="{PARENT_URL}/about/">Acerca de</a></li>
-      <li><a href="{SITE_URL}/" class="current">Fotos</a></li>
-      <li><a href="{PARENT_URL}/viajes/">Viajes</a></li>
-      <li><a href="{PARENT_URL}/lecturas/">Lecturas</a></li>
-      <li><a href="{PARENT_URL}/mastodon/">Cortos</a></li>
-      <li><a href="{PARENT_URL}/hispania-obscura/">Libros</a></li>
-      <li><a href="{PARENT_URL}/loops/">Loops</a></li>
+      <li class="nav-item"><a href="{PARENT_URL}/about/">Acerca de</a></li>
+      <li class="nav-item"><a href="{SITE_URL}/" class="current">Fotos</a></li>
+      <li class="nav-item"><a href="{PARENT_URL}/viajes/">Viajes</a></li>
+      <li class="nav-item"><a href="{PARENT_URL}/lecturas/">Lecturas</a></li>
+      <li class="nav-item"><a href="{PARENT_URL}/mastodon/">Cortos</a></li>
+      <li class="nav-item"><a href="{PARENT_URL}/hispania-obscura/">Libros</a></li>
+      <li class="nav-item"><a href="{PARENT_URL}/loops/">Loops</a></li>
     </ul>
   </nav>
 </header>

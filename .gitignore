@@ -19,3 +19,7 @@ data/images_cache/
 # Local notes / scratch
 .scratch/
 *.local.md
+
+# Screenshots locales y artefactos de Playwright (sesiones de debug)
+*.png
+.playwright-mcp/

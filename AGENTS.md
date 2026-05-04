@@ -228,10 +228,9 @@ curl -s https://fotos.impermanente.es/foto/<status_id>/ | grep -oE 'alt="[^"]+"'
 # D) feed.json
 curl -s https://fotos.impermanente.es/feed.json | jq '.[0].media_attachments[0].description'
 
-# E) impermanente.es/fotos/ — galería embebida en micro.blog (consume D)
-#    Renderiza el feed.json con el template microblog/fotos-page.html.
-#    Mismo modelo que B/C: caption + "Ciudad, País · fecha", click va a página propia.
-curl -s https://impermanente.es/fotos/ | grep -oE 'fotos\.impermanente\.es/foto/[0-9]+' | head -3
+# E) impermanente.es/fotos/ — meta-refresh a fotos.impermanente.es
+#    El menú "Fotos" del blog redirige aquí; ya no hay galería embebida.
+curl -s https://impermanente.es/fotos/ | grep -oE 'fotos\.impermanente\.es' | head -1
 # F) Pixelfed HTML público (Pixelfed es SPA, no renderiza alt en SSR — esperado vacío)
 # G) ActivityPub (federación a Mastodon)
 curl -s https://pixelfed.social/p/$PIXELFED_USERNAME/<status_id> \
@@ -240,24 +239,22 @@ curl -s https://pixelfed.social/p/$PIXELFED_USERNAME/<status_id> \
 
 ---
 
-## 6.bis. Página /fotos/ en micro.blog (template)
+## 6.bis. Diseño visual: heredado del blog
 
-Source of truth del HTML+JS de la página: **`microblog/fotos-page.html`** en este repo.
+`fotos.impermanente.es` carga directamente los 4 stylesheets del blog principal vía `<link rel="stylesheet">`:
 
-**Por qué existe:** la página `/fotos/` de impermanente.es vive en micro.blog (no es Hugo ni este repo), pero su comportamiento debe quedar alineado con `fotos.impermanente.es`. El template aquí es la versión canónica; la página real en micro.blog se sincroniza por copy-paste.
+- `https://impermanente.es/css/fonts.css` (declara la fuente "GTW", actualmente sin uso visible — el theme la sobreescribe)
+- `https://impermanente.es/css/main.css` (base + tokens del diseño Hugo)
+- `https://impermanente.es/css/photos-masonry.css` (grid de fotos)
+- `https://impermanente.es/custom.css` (theme **"Magnum"**: Lora serif + Inter sans, paleta blanco/negro/teal, footer negro)
 
-**Comportamiento del template:**
-- Hace fetch a `https://fotos.impermanente.es/feed.json?cb=Date.now()` (las 30 últimas).
-- Renderiza cada card con: imagen + caption (alt-text real o content_text, si solo hay fallback no muestra caption) + "Ciudad, País · fecha".
-- Click → `https://fotos.impermanente.es/foto/{status_id}/` (página propia, no Pixelfed).
-- Defensivo contra el bug de micro.blog que decodifica entidades HTML dentro de `<script>` (ver §8).
+**Mi `<style>` embebido** queda DESPUÉS en el `<head>` y solo añade reglas para componentes únicos de la galería (`.photo-grid`, `.photo-info`, `.photo-caption`, `.photo-meta-line`, paginación, página individual de foto). Reutiliza las variables del blog (`--serif`, `--sans`, `--bg`, `--text`, `--heading`, `--accent`, `--separator`, `--caption`, `--muted`, `--footer-bg`).
 
-**Workflow al cambiar el template:**
-1. Editar `microblog/fotos-page.html` aquí, commit + push.
-2. Copiar TODO el contenido del archivo y pegarlo en micro.blog → Design → Edit Pages → `/fotos/`. Sustituir contenido anterior. Guardar.
-3. micro.blog regenera el sitio en ~30s. Verificar visualmente en `https://impermanente.es/fotos/`.
+**Beneficio:** si JR cambia el theme del blog, `fotos.impermanente.es` se actualiza automáticamente sin tocar nada en este repo. Solo el cache CDN del blog (~10 min) y del navegador hacen de barrera temporal.
 
-**El cron NO toca esta pieza.** Si solo cambias el template, no hay que esperar al cron — el cambio en micro.blog se ve inmediatamente tras pegar.
+**HTML del header** (definido en `head()` de `build_site.py`) usa las clases idénticas al blog: `.header`, `.site-nav`, `.site-title`, `.u-photo`, `#avatar`, `.nav-menu`, `.nav-item`. Eso permite que el theme aplique sus estilos sin tener que duplicarlos.
+
+**Si quieres romper el vínculo** (por ejemplo para hacer un re-skin local independiente): copia los 4 archivos a `output/css/` durante el build y cambia las URLs a relativas. Hoy NO está hecho.
 
 ---
 
@@ -304,21 +301,16 @@ gh workflow run build.yml --repo Jrcruciani/impermanente-fotos
 - Cooldown 5–10 min y reintentar. Si persiste, subir `RETRY_429_BASE` o `THROTTLE`.
 
 ### "El JS de /fotos/ en micro.blog se rompe con SyntaxError"
-- micro.blog **decodifica entidades HTML dentro de `<script>`**. No usar `&quot;`, `&amp;`, etc. literalmente en el código.
+- micro.blog **decodifica entidades HTML dentro de `<script>`**. Histórico (cuando había una página `/fotos/` con JS embebido en micro.blog). Hoy `/fotos/` es solo un meta-refresh a `fotos.impermanente.es`. La regla queda anotada por si en el futuro vuelves a meter JS en alguna page de micro.blog.
 - Patrón seguro para `esc()`: usar `document.createElement('div').textContent = ...` y construir entidades con `String.fromCharCode(38)` para el `&`.
-- El template `microblog/fotos-page.html` ya aplica esta defensa. Si lo modificas, mantén la regla.
 
-### "Cambié microblog/fotos-page.html y impermanente.es/fotos/ no se actualiza"
-- El cron NO sincroniza el template a micro.blog. Es paso manual.
-- Tras commit+push del cambio: micro.blog → Design → Edit Pages → `/fotos/` → pegar nuevo contenido → guardar.
-- micro.blog regenera en ~30s. Hard refresh para ver el cambio.
-
-### "fotos.impermanente.es no usa la fuente del blog (GTW)"
-- `build_site.py` carga `https://impermanente.es/fonts/GT-W-*.woff2` con CORS. Verificar que el blog mantiene `access-control-allow-origin: *`:
+### "fotos.impermanente.es no se ve igual que el blog"
+- El sitio carga 4 stylesheets desde `https://impermanente.es/css/` y `/custom.css`. Si dejas de servirlos o cambia la URL, el sitio pierde el theme.
+- Verificar que el blog responde 200 y con `access-control-allow-origin: *` (los CSS están en el mismo origin que el sitio que los pide vía cross-origin):
   ```bash
-  curl -sI https://impermanente.es/fonts/GT-W-Regular.woff2 | grep -i access-control
+  curl -sI https://impermanente.es/custom.css | grep -i 'http\|access-control'
   ```
-- Si CORS deja de existir, hay que copiar los `.woff2` al output local o cambiar a fuente sistema.
+- Cache del navegador puede mantener una versión vieja del CSS — hard refresh (`Cmd+Shift+R`) tras un cambio en el blog.
 
 ### "Quiero regenerar todos los alt-text retroactivamente"
 - NO se hace solo si JR lo pide explícito. Coste alto en tiempo y reescribe historia. Si confirmado: borrar `data/generated.jsonl`, re-ejecutar generación con `--force` en publish.
@@ -394,6 +386,5 @@ Toda mención del autor en este repo y en cualquier output (HTML generado, JSON-
 - **Smoke test del endpoint de escritura:** `SMOKE_TEST_RESULTS.md`
 - **README operativo:** `README.md`
 - **Workflow CI:** `.github/workflows/build.yml`
-- **Template de la página /fotos/ en micro.blog:** `microblog/fotos-page.html`
 - **Sitio live:** https://fotos.impermanente.es/
 - **Repo:** https://github.com/Jrcruciani/impermanente-fotos
