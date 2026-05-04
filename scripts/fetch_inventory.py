@@ -184,23 +184,28 @@ def main() -> None:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
     print(f"  {INVENTORY_PATH} ({INVENTORY_PATH.stat().st_size // 1024}KB)")
 
-    print("\n→ Descargando + redimensionando imágenes pendientes (max 1024px, JPEG q85)...")
+    print("\n→ Asegurando cache local de imágenes (max 1024px, JPEG q85)...")
+    print(f"  Total a verificar: {len(records)} (skip si ya cacheada)")
     ok = 0
+    skipped = 0
     failed: list[tuple[str, str]] = []
-    for i, r in enumerate(pending, 1):
+    for i, r in enumerate(records, 1):
         dest = CACHE_DIR / f"{r['media_id']}.jpg"
         success, info = download_and_resize(r["image_url"], dest)
-        marker = "✓" if success else "✗"
         if success:
             ok += 1
+            if info == "cached":
+                skipped += 1
         else:
             failed.append((r["media_id"], info))
-        if i % 10 == 0 or i == len(pending):
-            print(f"  [{i}/{len(pending)}] {marker} {r['media_id']}: {info}")
+        if i % 25 == 0 or i == len(records):
+            marker = "✓" if success else "✗"
+            print(f"  [{i}/{len(records)}] {marker} {r['media_id']}: {info}")
         if info != "cached":
             time.sleep(SLEEP)
 
-    print(f"\n✅ Imágenes descargadas: {ok}/{len(pending)}")
+    downloaded = ok - skipped
+    print(f"\n✅ Cache OK: {ok}/{len(records)} ({downloaded} nuevas, {skipped} ya cacheadas)")
     if failed:
         print(f"❌ Fallaron {len(failed)}:")
         for mid, info in failed[:10]:
