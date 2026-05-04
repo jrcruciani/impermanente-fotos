@@ -11,6 +11,7 @@ Pipeline para generar y publicar **alt-text evocativo** en las fotos de [@Hispan
 3. **Publica** los alt-texts en Pixelfed via `PUT /api/v1/media/:id` con read-after-write (`scripts/publish.py`).
 4. **Construye un sitio estático** con todas las fotos paginadas, JSON-LD por foto, sitemap y robots (`scripts/build_site.py`).
 5. **Despliega** a GitHub Pages → `fotos.impermanente.es`.
+6. **Sirve la galería embebida** en `impermanente.es/fotos/` (micro.blog) con el template de `microblog/fotos-page.html`, que consume el mismo `feed.json` y enlaza a las páginas propias del sitio estático.
 
 ## Estructura
 
@@ -23,6 +24,9 @@ impermanente-fotos/
 │   └── images_cache/          # Fotos descargadas (gitignored)
 ├── prompt/                    # Prompt maestro para el LLM
 ├── style-guide/               # Style guide consolidado (voz JR)
+├── microblog/                 # Templates HTML+JS para páginas en micro.blog UI
+│   ├── fotos-page.html        # Galería /fotos/ que consume feed.json
+│   └── README.md              # Cómo desplegarlo (copy-paste a micro.blog)
 ├── scripts/
 │   ├── fetch_inventory.py     # Pixelfed → inventory.jsonl
 │   ├── next_batch.py          # Lista próximas pendientes

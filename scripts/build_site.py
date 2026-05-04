@@ -113,8 +113,25 @@ def fallback_alt(content_text: str | None, place: dict | None) -> str:
     return "Foto de Hispania Obscura"
 
 
+def fmt_place(place: dict | None) -> str:
+    """Formato unificado para mostrar ubicación: 'Ciudad, País', 'Ciudad' o ''."""
+    if not place or not place.get("name"):
+        return ""
+    name = place["name"].strip()
+    country = (place.get("country") or "").strip()
+    if country:
+        return f"{name}, {country}"
+    return name
+
+
 def merge_records() -> list[dict]:
-    """Une inventory + published por media_id; ordena por created_at desc."""
+    """Une inventory + published por media_id; ordena por created_at desc.
+
+    `alt_is_real` indica si el alt-text proviene de una fuente real
+    (published.jsonl o current_description de Pixelfed) o si es un fallback
+    genérico de fallback_alt(). Sirve para evitar mostrar captions feos
+    tipo "Foto en Lima" en la galería cuando aún no hay alt-text.
+    """
     inv = {r["media_id"]: r for r in load_jsonl(DATA_DIR / "inventory.jsonl")}
     pub_records = load_jsonl(DATA_DIR / "published.jsonl")
     pub_ok = {}
@@ -124,9 +141,17 @@ def merge_records() -> list[dict]:
 
     merged = []
     for mid, r in inv.items():
-        alt = pub_ok.get(mid, {}).get("alt_text") or r.get("current_description") or fallback_alt(
-            r.get("content_text"), r.get("place")
-        )
+        published_alt = pub_ok.get(mid, {}).get("alt_text")
+        current_alt = r.get("current_description")
+        if published_alt:
+            alt = published_alt
+            alt_is_real = True
+        elif current_alt:
+            alt = current_alt
+            alt_is_real = True
+        else:
+            alt = fallback_alt(r.get("content_text"), r.get("place"))
+            alt_is_real = False
         merged.append({
             "media_id": mid,
             "status_id": r["status_id"],
@@ -135,6 +160,7 @@ def merge_records() -> list[dict]:
             "preview_url": r.get("preview_url") or r["image_url"],
             "blurhash": r.get("blurhash"),
             "alt_text": alt,
+            "alt_is_real": alt_is_real,
             "place": r.get("place"),
             "created_at": r.get("created_at"),
             "content_text": r.get("content_text") or "",
@@ -165,6 +191,34 @@ def photo_url(status_id: str) -> str:
 # ---------- Templates ----------
 
 CSS = """
+@font-face {
+  font-family: "GTW";
+  font-display: swap;
+  src: url('https://impermanente.es/fonts/GT-W-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "GTW";
+  font-display: swap;
+  src: url('https://impermanente.es/fonts/GT-W-Regular-Oblique.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: "GTW";
+  font-display: swap;
+  src: url('https://impermanente.es/fonts/GT-W-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "GTW";
+  font-display: swap;
+  src: url('https://impermanente.es/fonts/GT-W-Bold-Oblique.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+}
 :root {
   --bg: #fafafa;
   --bg-elev: #fff;
@@ -192,7 +246,7 @@ CSS = """
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "GTW", -apple-system, system-ui, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
   background: var(--bg);
   color: var(--fg);
   margin: 0;
@@ -336,7 +390,7 @@ h2.section-title {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.photo-date {
+.photo-meta-line {
   display: block;
   font-size: .8rem;
   color: var(--fg-soft2);
@@ -344,6 +398,7 @@ h2.section-title {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+.photo-meta-line .photo-place { color: var(--fg-soft); }
 .pagination {
   display: flex;
   justify-content: center;
@@ -440,6 +495,10 @@ def head(title: str, description: str, canonical: str, og_image: str | None = No
 <meta name="author" content="{esc(AUTHOR_NAME)}">
 <meta name="color-scheme" content="light dark">
 <link rel="canonical" href="{esc(canonical)}">
+<link rel="preload" href="{PARENT_URL}/fonts/GT-W-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="{PARENT_URL}/fonts/GT-W-Regular-Oblique.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="{PARENT_URL}/fonts/GT-W-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="{PARENT_URL}/fonts/GT-W-Bold-Oblique.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(description)}">
 <meta property="og:url" content="{esc(canonical)}">
@@ -607,15 +666,29 @@ def render_gallery(items: list[dict]) -> str:
     parts = []
     for p in items:
         date = fmt_date_es(p.get("created_at"))
+        place_str = fmt_place(p.get("place"))
+        # Caption: prioriza el contenido escrito por el autor; si no hay,
+        # usa el alt-text real. Si solo hay fallback genérico, no muestra
+        # caption (evita "Foto en Lima" feo durante la ventana sin alt-text).
         caption = (p.get("content_text") or "").strip().split("\n")[0]
-        if not caption:
+        if not caption and p.get("alt_is_real"):
             caption = p["alt_text"][:120]
+
+        meta_parts = []
+        if place_str:
+            meta_parts.append(f'<span class="photo-place">{esc(place_str)}</span>')
+        if date:
+            meta_parts.append(esc(date))
+        meta_line = ('<span class="photo-meta-line">' + ' · '.join(meta_parts) + '</span>') if meta_parts else ''
+        caption_html = (f'<p class="photo-caption">{esc(caption)}</p>' if caption else '')
+
+        dim_attrs = (' width="' + str(p['meta'].get('width')) + '" height="' + str(p['meta'].get('height')) + '"') if p['meta'].get('width') else ''
         parts.append(f"""<div class="gallery-item">
   <a href="{esc(photo_url(p['status_id']))}">
-    <img src="{esc(p['preview_url'])}" alt="{esc(p['alt_text'])}" loading="lazy"{(' width="' + str(p['meta'].get('width')) + '" height="' + str(p['meta'].get('height')) + '"') if p['meta'].get('width') else ''}>
+    <img src="{esc(p['preview_url'])}" alt="{esc(p['alt_text'])}" loading="lazy"{dim_attrs}>
     <div class="photo-info">
-      <p class="photo-caption">{esc(caption)}</p>
-      {('<span class="photo-date">' + esc(date) + '</span>') if date else ''}
+      {caption_html}
+      {meta_line}
     </div>
   </a>
 </div>""")
@@ -708,6 +781,15 @@ def render_photo_page(p: dict, prev_p: dict | None, next_p: dict | None) -> str:
     height = p["meta"].get("height", "")
     dim_attrs = f' width="{width}" height="{height}"' if width else ""
 
+    place_str = fmt_place(p.get("place"))
+    date_str = fmt_date_es(p.get("created_at"))
+    meta_bits = []
+    if place_str:
+        meta_bits.append(esc(place_str))
+    if date_str:
+        meta_bits.append('Publicada el ' + esc(date_str))
+    meta_bits.append(f'<a href="{esc(p["status_url"])}" target="_blank" rel="noopener">Ver en Pixelfed</a>')
+
     body += f"""<article>
   <div class="photo-hero">
     <a href="{esc(p['image_url'])}" rel="noopener">
@@ -718,8 +800,7 @@ def render_photo_page(p: dict, prev_p: dict | None, next_p: dict | None) -> str:
     {esc(p['alt_text'])}
   </div>
   <div class="photo-meta">
-    {('Publicada el ' + esc(fmt_date_es(p['created_at'])) + ' · ') if p.get('created_at') else ''}
-    <a href="{esc(p['status_url'])}" target="_blank" rel="noopener">Ver en Pixelfed</a>
+    {' · '.join(meta_bits)}
   </div>
 """
 

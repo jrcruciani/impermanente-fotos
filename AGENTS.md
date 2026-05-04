@@ -228,12 +228,36 @@ curl -s https://fotos.impermanente.es/foto/<status_id>/ | grep -oE 'alt="[^"]+"'
 # D) feed.json
 curl -s https://fotos.impermanente.es/feed.json | jq '.[0].media_attachments[0].description'
 
-# E) impermanente.es/fotos/ (rendered DOM heredado de D)
+# E) impermanente.es/fotos/ — galería embebida en micro.blog (consume D)
+#    Renderiza el feed.json con el template microblog/fotos-page.html.
+#    Mismo modelo que B/C: caption + "Ciudad, País · fecha", click va a página propia.
+curl -s https://impermanente.es/fotos/ | grep -oE 'fotos\.impermanente\.es/foto/[0-9]+' | head -3
 # F) Pixelfed HTML público (Pixelfed es SPA, no renderiza alt en SSR — esperado vacío)
 # G) ActivityPub (federación a Mastodon)
 curl -s https://pixelfed.social/p/$PIXELFED_USERNAME/<status_id> \
   -H "Accept: application/activity+json" | jq '.attachment[].name'
 ```
+
+---
+
+## 6.bis. Página /fotos/ en micro.blog (template)
+
+Source of truth del HTML+JS de la página: **`microblog/fotos-page.html`** en este repo.
+
+**Por qué existe:** la página `/fotos/` de impermanente.es vive en micro.blog (no es Hugo ni este repo), pero su comportamiento debe quedar alineado con `fotos.impermanente.es`. El template aquí es la versión canónica; la página real en micro.blog se sincroniza por copy-paste.
+
+**Comportamiento del template:**
+- Hace fetch a `https://fotos.impermanente.es/feed.json?cb=Date.now()` (las 30 últimas).
+- Renderiza cada card con: imagen + caption (alt-text real o content_text, si solo hay fallback no muestra caption) + "Ciudad, País · fecha".
+- Click → `https://fotos.impermanente.es/foto/{status_id}/` (página propia, no Pixelfed).
+- Defensivo contra el bug de micro.blog que decodifica entidades HTML dentro de `<script>` (ver §8).
+
+**Workflow al cambiar el template:**
+1. Editar `microblog/fotos-page.html` aquí, commit + push.
+2. Copiar TODO el contenido del archivo y pegarlo en micro.blog → Design → Edit Pages → `/fotos/`. Sustituir contenido anterior. Guardar.
+3. micro.blog regenera el sitio en ~30s. Verificar visualmente en `https://impermanente.es/fotos/`.
+
+**El cron NO toca esta pieza.** Si solo cambias el template, no hay que esperar al cron — el cambio en micro.blog se ve inmediatamente tras pegar.
 
 ---
 
@@ -282,6 +306,19 @@ gh workflow run build.yml --repo Jrcruciani/impermanente-fotos
 ### "El JS de /fotos/ en micro.blog se rompe con SyntaxError"
 - micro.blog **decodifica entidades HTML dentro de `<script>`**. No usar `&quot;`, `&amp;`, etc. literalmente en el código.
 - Patrón seguro para `esc()`: usar `document.createElement('div').textContent = ...` y construir entidades con `String.fromCharCode(38)` para el `&`.
+- El template `microblog/fotos-page.html` ya aplica esta defensa. Si lo modificas, mantén la regla.
+
+### "Cambié microblog/fotos-page.html y impermanente.es/fotos/ no se actualiza"
+- El cron NO sincroniza el template a micro.blog. Es paso manual.
+- Tras commit+push del cambio: micro.blog → Design → Edit Pages → `/fotos/` → pegar nuevo contenido → guardar.
+- micro.blog regenera en ~30s. Hard refresh para ver el cambio.
+
+### "fotos.impermanente.es no usa la fuente del blog (GTW)"
+- `build_site.py` carga `https://impermanente.es/fonts/GT-W-*.woff2` con CORS. Verificar que el blog mantiene `access-control-allow-origin: *`:
+  ```bash
+  curl -sI https://impermanente.es/fonts/GT-W-Regular.woff2 | grep -i access-control
+  ```
+- Si CORS deja de existir, hay que copiar los `.woff2` al output local o cambiar a fuente sistema.
 
 ### "Quiero regenerar todos los alt-text retroactivamente"
 - NO se hace solo si JR lo pide explícito. Coste alto en tiempo y reescribe historia. Si confirmado: borrar `data/generated.jsonl`, re-ejecutar generación con `--force` en publish.
@@ -357,5 +394,6 @@ Toda mención del autor en este repo y en cualquier output (HTML generado, JSON-
 - **Smoke test del endpoint de escritura:** `SMOKE_TEST_RESULTS.md`
 - **README operativo:** `README.md`
 - **Workflow CI:** `.github/workflows/build.yml`
+- **Template de la página /fotos/ en micro.blog:** `microblog/fotos-page.html`
 - **Sitio live:** https://fotos.impermanente.es/
 - **Repo:** https://github.com/Jrcruciani/impermanente-fotos
