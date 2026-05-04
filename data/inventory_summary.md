@@ -4,7 +4,7 @@
 - Total media_attachments (image): 155
 - Pendientes de alt-text: 0
 - En posts multi-attachment: 0
-- Imágenes descargadas correctamente: 0
+- Imágenes descargadas correctamente: 155
 - Imágenes que fallaron: 0
 
 ## Distribución temporal (pendientes)

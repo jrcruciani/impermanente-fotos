@@ -30,6 +30,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 OUTPUT_DIR = ROOT / "output"
 IMAGES_CACHE_DIR = DATA_DIR / "images_cache"
+COLLECTIONS_PATH = DATA_DIR / "collections.jsonl"
 
 SITE_DOMAIN = "fotos.impermanente.es"
 SITE_URL = f"https://{SITE_DOMAIN}"
@@ -40,51 +41,6 @@ AUTHOR_ID = "https://impermanente.es/about/#person"
 SERIES_ID = f"{SITE_URL}/#series"
 PHOTOS_PER_PAGE = 30
 LICENSE_URL = "https://creativecommons.org/licenses/by/4.0/"
-
-COLLECTIONS = [
-    {
-        "slug": "umbrales",
-        "name": "Umbrales",
-        "description": "Marca personal y eje del trabajo fotográfico del autor: arcos, túneles, pasajes y orillas como espacios de tránsito y contacto entre dos mundos.",
-        "url": "https://pixelfed.social/c/945553508223330178",
-        "thumb": "https://pxscdn.com/public/m/_v2/783480968440772334/0c2c69eb8-6377a8/CPzeJtgtFI5f/xUEmfN7t97xz3laCHiinCnKYA87bDpdwii2SRTdm.jpg",
-    },
-    {
-        "slug": "por-la-calle",
-        "name": "Por la calle",
-        "description": "Gestos, escenas y personas en lo cotidiano urbano: street photography sin pose ni guion.",
-        "url": "https://pixelfed.social/c/945557139208117482",
-        "thumb": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/a04qBIyRiDWO/BXHpDtoJQEECKYTZZX5VbjAx18VJb6iSNlQCU4RE.jpg",
-    },
-    {
-        "slug": "ciudades",
-        "name": "Ciudades",
-        "description": "Arquitectura, ritmo y atmósfera de ciudades visitadas.",
-        "url": "https://pixelfed.social/c/945559829313601798",
-        "thumb": "https://pxscdn.com/public/m/_v2/783480968440772334/a1431798c-70628a/5sZGV1HRmf19/Fo5E5nWxUAMtGSI6RTDR6C9VT1BjZNzzC8lcHFxJ.jpg",
-    },
-    {
-        "slug": "oubal",
-        "name": "Oubal",
-        "description": "Retrato cotidiano y libre: fotos de Valeria siendo Valeria.",
-        "url": "https://pixelfed.social/c/945724326079277422",
-        "thumb": "https://pxscdn.com/public/m/_v2/783480968440772334/ffe7c43a6-a8b5f2/KgaGEkAkOZ43/WpYhTbCcMLgeBIOgJyFWrT3FOlYCB5zlrogcJPh5.jpg",
-    },
-    {
-        "slug": "psicopompo",
-        "name": "Psicopompo",
-        "description": "Patrimonio funerario y tanatoturismo: cementerios históricos, escultura sepulcral y simbología de la muerte fotografiados en Europa y otras geografías.",
-        "url": "https://pixelfed.social/c/945719873655811786",
-        "thumb": "https://pxscdn.com/public/m/_v2/783480968440772334/0c2c69eb8-6377a8/jfpBNgHl6733/LVeuunKoh03KDvSpPxkfvPYBLgjNZoRwwZCem5aY.jpg",
-    },
-    {
-        "slug": "dorado",
-        "name": "Dorado",
-        "description": "La luz que cierra el día: puestas de sol y golden hour en distintos paisajes.",
-        "url": "https://pixelfed.social/c/945723351877605084",
-        "thumb": "https://pxscdn.com/public/m/_v2/783480968440772334/634f2a4e4-291f24/XBjGkWXgqShy/qfbD2c9Ed3c4QaUkSpCHKZx2k9AjLqoXiTdtE7SX.jpg",
-    },
-]
 
 
 # ---------- Utility ----------
@@ -523,6 +479,11 @@ def head(title: str, description: str, canonical: str, og_image: str | None = No
       <li class="nav-item"><a href="{PARENT_URL}/hispania-obscura/">Libros</a></li>
       <li class="nav-item"><a href="{PARENT_URL}/loops/">Loops</a></li>
     </ul>
+    <div class="hamburger" aria-label="Abrir menú" role="button" tabindex="0">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </div>
   </nav>
 </header>
 <main>
@@ -535,6 +496,19 @@ def footer() -> str:
     <p>&copy;2023&nbsp;-&nbsp;2026 J.R. Cruciani</p>
 <p><a href="https://www.buymeacoffee.com/jrcruciani" target="_blank" rel="noopener" class="btn-coffee">🍕 Invítame una pizza</a></p><p>Suscribirse por&nbsp;<a href="{PARENT_URL}/feed.xml">RSS</a></p>
 </footer>
+<script>
+(function(){{
+  const h = document.querySelector('.hamburger');
+  const m = document.querySelector('.nav-menu');
+  if (!h || !m) return;
+  function toggle(){{ h.classList.toggle('active'); m.classList.toggle('active'); }}
+  h.addEventListener('click', toggle);
+  h.addEventListener('keydown', e => {{ if (e.key === 'Enter' || e.key === ' ') {{ e.preventDefault(); toggle(); }} }});
+  document.querySelectorAll('.nav-menu a').forEach(a => a.addEventListener('click', () => {{
+    h.classList.remove('active'); m.classList.remove('active');
+  }}));
+}})();
+</script>
 </body>
 </html>
 """
@@ -640,20 +614,79 @@ def jsonld_breadcrumbs(crumbs: list[tuple[str, str]]) -> dict:
     }
 
 
+def jsonld_collectionpage(coll: dict, items: list[dict], canonical: str) -> dict:
+    return {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "@id": canonical + "#page",
+        "url": canonical,
+        "name": coll["title"],
+        "description": coll.get("description") or "",
+        "isPartOf": {"@id": SERIES_ID},
+        "inLanguage": "es",
+        "mainEntity": {
+            "@type": "ImageGallery",
+            "@id": canonical + "#gallery",
+            "name": coll["title"],
+            "numberOfItems": len(items),
+            "image": [jsonld_imageobject(p) for p in items],
+        },
+    }
+
+
 # ---------- Renderers ----------
 
-def render_collections() -> str:
+def render_collections(collections: list[dict]) -> str:
+    if not collections:
+        return ""
     cards = []
-    for c in COLLECTIONS:
-        cards.append(f"""<a href="{esc(c['url'])}" target="_blank" rel="noopener" class="collection-card">
-  <img src="{esc(c['thumb'])}" alt="{esc(c['name'])}" loading="lazy">
-  <span class="collection-name">{esc(c['name'])}</span>
+    for c in collections:
+        local_thumb = IMAGES_CACHE_DIR / f"coll_{c['id']}.jpg"
+        thumb_src = f"/img/coll_{c['id']}.jpg" if local_thumb.exists() else (c.get('thumb_url') or '')
+        cards.append(f"""<a href="/coleccion/{esc(c['slug'])}/" class="collection-card">
+  <img src="{esc(thumb_src)}" alt="{esc(c['title'])}" loading="lazy">
+  <span class="collection-name">{esc(c['title'])}</span>
 </a>""")
     return f"""<h2 class="section-title">Colecciones</h2>
 <div class="collections-grid">
 {''.join(cards)}
 </div>
 """
+
+
+def render_collection_page(coll: dict, items: list[dict]) -> str:
+    title = f"{coll['title']} | impermanente"
+    description = coll.get("description") or f"Colección «{coll['title']}» de J.R. Cruciani — {len(items)} fotografías."
+    canonical = f"{SITE_URL}/coleccion/{coll['slug']}/"
+
+    page_jsonld = [
+        jsonld_collectionpage(coll, items, canonical),
+        jsonld_breadcrumbs([
+            ("Fotos", SITE_URL + "/"),
+            ("Colecciones", SITE_URL + "/#colecciones"),
+            (coll["title"], canonical),
+        ]),
+    ]
+
+    og_img_url = None
+    local_thumb = IMAGES_CACHE_DIR / f"coll_{coll['id']}.jpg"
+    if local_thumb.exists():
+        og_img_url = f"{SITE_URL}/img/coll_{coll['id']}.jpg"
+    elif coll.get("thumb_url"):
+        og_img_url = coll["thumb_url"]
+
+    body = head(title, description[:200], canonical, og_img_url, extra_jsonld=page_jsonld)
+    body += '<nav class="breadcrumb" aria-label="breadcrumb"><a href="/">Fotos</a> · <span>Colecciones</span> · <span>{}</span></nav>\n'.format(esc(coll["title"]))
+    body += f'<h1 class="collection-title">{esc(coll["title"])}</h1>\n'
+    if coll.get("description"):
+        body += f'<p class="collection-description">{esc(coll["description"])}</p>\n'
+    body += f'<p class="collection-meta">{len(items)} fotografías</p>\n'
+    if not items:
+        body += '<p>Esta colección aún no tiene fotos disponibles.</p>\n'
+    else:
+        body += render_gallery(items)
+    body += footer()
+    return body
 
 
 def render_gallery(items: list[dict]) -> str:
@@ -718,7 +751,7 @@ def render_pagination(current_page: int, total_pages: int) -> str:
 
 
 def render_index_page(page: int, total_pages: int, page_items: list[dict],
-                      include_collections: bool) -> str:
+                      include_collections: bool, collections: list[dict] | None = None) -> str:
     if page == 1:
         title = "Fotos | impermanente"
         description = "Fotografías de umbrales, calle, ciudades, retratos, cementerios y luz dorada: mi manera de mirar lo que está a punto de cambiar, desaparecer o quedarse un segundo más."
@@ -743,7 +776,7 @@ def render_index_page(page: int, total_pages: int, page_items: list[dict],
 <hr class="section-divider" aria-hidden="true">
 """
         if include_collections:
-            body += render_collections()
+            body += render_collections(collections or [])
         body += '<h2 class="section-title">Últimas fotos</h2>\n'
     else:
         body += f'<h1>Archivo de fotos · página {page}</h1>\n'
@@ -818,13 +851,17 @@ def render_photo_page(p: dict, prev_p: dict | None, next_p: dict | None) -> str:
     return body
 
 
-def render_sitemap(items: list[dict], total_pages: int) -> str:
+def render_sitemap(items: list[dict], total_pages: int, collections: list[dict] | None = None) -> str:
     today = datetime.now(timezone.utc).date().isoformat()
     urls = [
         (SITE_URL + "/", today, "weekly", "1.0"),
     ]
     for n in range(2, total_pages + 1):
         urls.append((f"{SITE_URL}/p/{n}/", today, "weekly", "0.7"))
+    for c in (collections or []):
+        if c.get("status_ids"):
+            lastmod = (c.get("updated_at") or today)[:10]
+            urls.append((f"{SITE_URL}/coleccion/{c['slug']}/", lastmod, "weekly", "0.7"))
     for p in items:
         urls.append((photo_url(p["status_id"]), (p.get("created_at") or today)[:10], "monthly", "0.6"))
     body = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
@@ -894,7 +931,7 @@ def write(path: Path, content: str) -> None:
     path.write_text(content, encoding="utf-8")
 
 
-def build(output_dir: Path, items: list[dict]) -> None:
+def build(output_dir: Path, items: list[dict], collections: list[dict] | None = None) -> None:
     if output_dir.exists():
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True)
@@ -912,12 +949,16 @@ def build(output_dir: Path, items: list[dict]) -> None:
 
     total_pages = max(1, (len(items) + PHOTOS_PER_PAGE - 1) // PHOTOS_PER_PAGE)
 
+    collections = collections or []
+
     # index + páginas paginadas
     for page in range(1, total_pages + 1):
         start = (page - 1) * PHOTOS_PER_PAGE
         end = start + PHOTOS_PER_PAGE
         page_items = items[start:end]
-        html_str = render_index_page(page, total_pages, page_items, include_collections=(page == 1))
+        html_str = render_index_page(page, total_pages, page_items,
+                                     include_collections=(page == 1),
+                                     collections=collections)
         if page == 1:
             write(output_dir / "index.html", html_str)
         else:
@@ -930,8 +971,22 @@ def build(output_dir: Path, items: list[dict]) -> None:
         html_str = render_photo_page(p, prev_p, next_p)
         write(output_dir / f"foto/{p['status_id']}/index.html", html_str)
 
+    # páginas por colección
+    by_status = {p["status_id"]: p for p in items}
+    coll_built = 0
+    for c in collections:
+        coll_items = [by_status[sid] for sid in c.get("status_ids", []) if sid in by_status]
+        if not coll_items:
+            print(f"  [coleccion] skip {c['slug']}: 0 fotos disponibles")
+            continue
+        html_str = render_collection_page(c, coll_items)
+        write(output_dir / f"coleccion/{c['slug']}/index.html", html_str)
+        coll_built += 1
+    if collections:
+        print(f"  [coleccion] {coll_built}/{len(collections)} páginas de colección")
+
     # sitemap, robots, feed
-    write(output_dir / "sitemap.xml", render_sitemap(items, total_pages))
+    write(output_dir / "sitemap.xml", render_sitemap(items, total_pages, collections))
     write(output_dir / "robots.txt", render_robots())
     write(output_dir / "feed.json", render_feed_json(items))
 
@@ -957,11 +1012,14 @@ def main() -> None:
     if not items:
         raise SystemExit("No hay records en data/inventory.jsonl. Ejecuta fetch_inventory.py primero.")
 
-    build(args.out, items)
+    collections = load_jsonl(COLLECTIONS_PATH)
+
+    build(args.out, items, collections)
     print(f"Sitio generado en {args.out}/")
     print(f"  - {len(items)} fotos")
     print(f"  - {(len(items) + PHOTOS_PER_PAGE - 1) // PHOTOS_PER_PAGE} páginas paginadas")
     print(f"  - {len(items)} páginas individuales")
+    print(f"  - {len(collections)} colecciones")
     print(f"  - sitemap.xml, robots.txt, feed.json, 404.html, CNAME")
 
 

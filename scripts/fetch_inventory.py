@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 CACHE_DIR = DATA_DIR / "images_cache"
 INVENTORY_PATH = DATA_DIR / "inventory.jsonl"
+COLLECTIONS_PATH = DATA_DIR / "collections.jsonl"
 SUMMARY_PATH = DATA_DIR / "inventory_summary.md"
 
 MAX_DIM = 1024
@@ -155,6 +156,34 @@ def needs_alt(rec: dict) -> bool:
     return False
 
 
+def slugify(text: str) -> str:
+    """Lowercase, ASCII-only, separadores en guiones. 'Por la Calle' -> 'por-la-calle'."""
+    import unicodedata
+    import re
+    norm = unicodedata.normalize("NFKD", text)
+    ascii_str = norm.encode("ascii", "ignore").decode("ascii").lower()
+    slug = re.sub(r"[^a-z0-9]+", "-", ascii_str).strip("-")
+    return slug or "sin-titulo"
+
+
+def fetch_collections(instance: str, account_id: str, token: str) -> list[dict]:
+    """Lista todas las colecciones del usuario via /api/v1.1/collections/accounts/{id}."""
+    url = f"https://{instance}/api/v1.1/collections/accounts/{account_id}"
+    headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
+    r = requests.get(url, headers=headers, timeout=TIMEOUT)
+    r.raise_for_status()
+    return r.json()
+
+
+def fetch_collection_items(instance: str, collection_id: str, token: str) -> list[str]:
+    """Devuelve lista de status_ids de una colección via /api/v1.1/collections/items/{id}."""
+    url = f"https://{instance}/api/v1.1/collections/items/{collection_id}"
+    headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
+    r = requests.get(url, headers=headers, timeout=TIMEOUT)
+    r.raise_for_status()
+    return [item["id"] for item in r.json()]
+
+
 def main() -> None:
     env = load_env()
     instance = env["PIXELFED_INSTANCE"]
@@ -210,6 +239,59 @@ def main() -> None:
         print(f"❌ Fallaron {len(failed)}:")
         for mid, info in failed[:10]:
             print(f"   - {mid}: {info}")
+
+    # ----- Colecciones (auto-discovery) -----
+    print("\n→ Descubriendo colecciones del usuario...")
+    try:
+        raw_colls = fetch_collections(instance, account_id, token)
+    except Exception as e:
+        print(f"  ⚠ no se pudo listar colecciones: {e}")
+        raw_colls = []
+    print(f"  {len(raw_colls)} colecciones encontradas")
+
+    collections = []
+    for c in raw_colls:
+        cid = str(c["id"])
+        title = c.get("title") or f"Colección {cid}"
+        try:
+            status_ids = fetch_collection_items(instance, cid, token)
+        except Exception as e:
+            print(f"  ⚠ items de {title} fallaron: {e}")
+            status_ids = []
+        coll = {
+            "id": cid,
+            "slug": slugify(title),
+            "title": title,
+            "description": (c.get("description") or "").strip(),
+            "thumb_url": c.get("thumb"),
+            "url_pixelfed": c.get("url"),
+            "updated_at": c.get("updated_at"),
+            "published_at": c.get("published_at"),
+            "visibility": c.get("visibility"),
+            "status_ids": status_ids,
+        }
+        collections.append(coll)
+        print(f"  • {title} ({coll['slug']}): {len(status_ids)} fotos")
+        time.sleep(SLEEP)
+
+    print(f"\n→ Escribiendo {COLLECTIONS_PATH.name}...")
+    with open(COLLECTIONS_PATH, "w") as f:
+        for c in collections:
+            f.write(json.dumps(c, ensure_ascii=False) + "\n")
+    print(f"  {COLLECTIONS_PATH} ({COLLECTIONS_PATH.stat().st_size // 1024}KB)")
+
+    print("\n→ Descargando thumbs de colecciones...")
+    coll_ok = 0
+    for c in collections:
+        if not c.get("thumb_url"):
+            continue
+        dest = CACHE_DIR / f"coll_{c['id']}.jpg"
+        success, info = download_and_resize(c["thumb_url"], dest)
+        if success:
+            coll_ok += 1
+        if info != "cached":
+            time.sleep(SLEEP)
+    print(f"✅ Thumbs colecciones: {coll_ok}/{len(collections)}")
 
     # Resumen útil
     summary = [
