@@ -29,6 +29,7 @@ from datetime import datetime, timezone
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 OUTPUT_DIR = ROOT / "output"
+IMAGES_CACHE_DIR = DATA_DIR / "images_cache"
 
 SITE_DOMAIN = "fotos.impermanente.es"
 SITE_URL = f"https://{SITE_DOMAIN}"
@@ -676,12 +677,16 @@ def render_gallery(items: list[dict]) -> str:
         caption_html = (f'<p class="photo-caption">{esc(caption)}</p>' if caption else '')
 
         dim_attrs = (' width="' + str(p['meta'].get('width')) + '" height="' + str(p['meta'].get('height')) + '"') if p['meta'].get('width') else ''
+        # Galería: usa thumb local (1024px max, aspect natural) si existe.
+        # Fallback al preview_url remoto solo si la cache está vacía.
+        local_thumb = IMAGES_CACHE_DIR / f"{p['media_id']}.jpg"
+        thumb_src = f"/img/{p['media_id']}.jpg" if local_thumb.exists() else p['preview_url']
         # Emitimos `class="loaded"` en <li> y `class="visible"` en <img>
         # para que el CSS del blog (photos-masonry.css) muestre la foto
         # inmediatamente sin esperar al JS de loading que el blog usa.
         parts.append(f"""<li class="loaded">
   <a href="{esc(photo_url(p['status_id']))}">
-    <img src="{esc(p['preview_url'])}" alt="{esc(p['alt_text'])}" loading="lazy" class="visible"{dim_attrs}>
+    <img src="{esc(thumb_src)}" alt="{esc(p['alt_text'])}" loading="lazy" class="visible"{dim_attrs}>
     <div class="photo-info">
       {caption_html}
       {meta_line}
@@ -893,6 +898,17 @@ def build(output_dir: Path, items: list[dict]) -> None:
     if output_dir.exists():
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True)
+
+    # Copia los thumbs locales (1024px max, aspect natural) generados por
+    # fetch_inventory.py. Sirven la galería sin recurrir al `_thumb.jpg`
+    # cuadrado de Pixelfed que destroza el aspect ratio original.
+    img_dest = output_dir / "img"
+    if IMAGES_CACHE_DIR.exists():
+        shutil.copytree(IMAGES_CACHE_DIR, img_dest)
+        print(f"  [img] Copiados {sum(1 for _ in img_dest.iterdir())} thumbs a output/img/")
+    else:
+        img_dest.mkdir(parents=True, exist_ok=True)
+        print(f"  [img] AVISO: {IMAGES_CACHE_DIR} no existe; la galería caerá a previews remotos")
 
     total_pages = max(1, (len(items) + PHOTOS_PER_PAGE - 1) // PHOTOS_PER_PAGE)
 
