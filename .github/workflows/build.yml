@@ -40,6 +40,14 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Restore/save images cache
+        uses: actions/cache@v4
+        with:
+          path: data/images_cache
+          key: images-${{ hashFiles('data/inventory.jsonl') }}
+          restore-keys: |
+            images-
+
       - name: Fetch inventory delta from Pixelfed
         env:
           PIXELFED_INSTANCE: ${{ secrets.PIXELFED_INSTANCE }}
@@ -91,6 +99,39 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: Restore images cache
+        uses: actions/cache@v4
+        with:
+          path: data/images_cache
+          key: images-${{ hashFiles('data/inventory.jsonl') }}
+          restore-keys: |
+            images-
+
+      - name: Ensure images cache is populated (fallback fetch)
+        env:
+          PIXELFED_INSTANCE: ${{ secrets.PIXELFED_INSTANCE }}
+          PIXELFED_USERNAME: ${{ secrets.PIXELFED_USERNAME }}
+          PIXELFED_ACCOUNT_ID: ${{ secrets.PIXELFED_ACCOUNT_ID }}
+          PIXELFED_ACCESS_TOKEN: ${{ secrets.PIXELFED_ACCESS_TOKEN }}
+        run: |
+          EXPECTED=$(wc -l < data/inventory.jsonl | tr -d ' ')
+          ACTUAL=$(ls data/images_cache/ 2>/dev/null | wc -l | tr -d ' ')
+          echo "Images cache: $ACTUAL / $EXPECTED"
+          if [ "$ACTUAL" -lt "$EXPECTED" ]; then
+            echo "Cache incompleto, re-fetching..."
+            mkdir -p $HOME/.config/hispania-obscura
+            cat > $HOME/.config/hispania-obscura/.env <<EOF
+          PIXELFED_INSTANCE="${PIXELFED_INSTANCE}"
+          PIXELFED_USERNAME="${PIXELFED_USERNAME}"
+          PIXELFED_ACCOUNT_ID="${PIXELFED_ACCOUNT_ID}"
+          PIXELFED_ACCESS_TOKEN="${PIXELFED_ACCESS_TOKEN}"
+          EOF
+            chmod 600 $HOME/.config/hispania-obscura/.env
+            python3 scripts/fetch_inventory.py
+          else
+            echo "Cache OK, skip fetch"
+          fi
 
       - name: Build static site
         run: python3 scripts/build_site.py
