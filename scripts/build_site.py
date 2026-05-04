@@ -278,58 +278,84 @@ h2.section-title {
   .collections-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* === Galería de fotos (lista vertical, full-bleed estilo Magnum) === */
-.gallery {
+/* === Galería de fotos: masonry 3 columnas (estilo Magnum del blog) ===
+   Reutilizamos la clase `.masonry-grid` del blog (photos-masonry.css)
+   pero forzamos column-count aquí porque nuestro <main> no tiene clase
+   `.photos`/`.photos-wide`. Skip del JS de loading: emitimos `class="loaded"`
+   en cada <li> y `class="visible"` en cada <img> desde el SSR. */
+.masonry-grid {
+  column-count: 3;
+  column-gap: 8px;
+  list-style: none;
   margin: 30px 0;
+  padding: 0;
 }
-.gallery-item {
-  margin-bottom: 80px;
+.masonry-grid li {
+  background: transparent;
+  border-radius: 0;
+  break-inside: avoid;
+  margin: 0 0 8px;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  list-style: none;
 }
-.gallery-item a {
+/* override del placeholder "Loading..." del blog: no lo necesitamos */
+.masonry-grid li::before {
+  display: none !important;
+}
+.masonry-grid li a {
   display: block;
-  color: var(--text);
   text-decoration: none;
+  color: var(--text);
 }
-.gallery-item img {
+.masonry-grid img {
+  display: block;
+  opacity: 1 !important;
   width: 100%;
   height: auto;
-  display: block;
   border-radius: 0 !important;
   margin: 0 !important;
-}
-.gallery-item:hover img {
-  opacity: 0.92;
   transition: opacity 0.2s ease;
 }
-
-.photo-info {
-  padding: 16px 0 0;
-  max-width: var(--text-width, 620px);
-  margin: 0 auto;
+.masonry-grid li a:hover img {
+  opacity: 0.92;
+  filter: none;
 }
-.photo-caption {
+.masonry-grid .photo-info {
+  padding: 8px 4px 16px;
+  max-width: none;
+  margin: 0;
+}
+.masonry-grid .photo-caption {
   font-family: var(--serif);
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   font-weight: var(--weight-light, 300);
-  line-height: 1.5;
+  line-height: 1.45;
   color: var(--text);
-  margin: 0 0 10px;
+  margin: 0 0 6px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.photo-meta-line {
+.masonry-grid .photo-meta-line {
   font-family: var(--sans);
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: var(--weight-normal, 400);
-  letter-spacing: 1.5px;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
   color: var(--muted);
   display: block;
 }
-.photo-meta-line .photo-place {
+.masonry-grid .photo-meta-line .photo-place {
   color: var(--caption);
+}
+@media (max-width: 768px) {
+  .masonry-grid { column-count: 2; }
+}
+@media (max-width: 375px) {
+  .masonry-grid { column-count: 1; }
 }
 
 /* === Paginación (estilo Magnum) === */
@@ -439,8 +465,7 @@ body.photo-page main {
 /* === Mobile === */
 @media (max-width: 768px) {
   main { padding: 40px 16px 30px; }
-  .gallery-item { margin-bottom: 50px; }
-  .photo-caption { font-size: 1.5rem; }
+  .masonry-grid .photo-caption { font-size: 1.2rem; }
   .photo-page .photo-text { font-size: 1.7rem; }
   h2.section-title { font-size: 1.7rem; }
 }
@@ -506,9 +531,8 @@ def head(title: str, description: str, canonical: str, og_image: str | None = No
 def footer() -> str:
     return f"""</main>
 <footer>
-  Hecho con luz por <a href="{PARENT_URL}/about/">{esc(AUTHOR_NAME)}</a> ·
-  Las fotos son CC BY 4.0 ·
-  <a href="{PIXELFED_USER_URL}">@HispaniaObscura</a>
+    <p>&copy;2023&nbsp;-&nbsp;2026 J.R. Cruciani</p>
+<p><a href="https://www.buymeacoffee.com/jrcruciani" target="_blank" rel="noopener" class="btn-coffee">🍕 Invítame una pizza</a></p><p>Suscribirse por&nbsp;<a href="{PARENT_URL}/feed.xml">RSS</a></p>
 </footer>
 </body>
 </html>
@@ -652,16 +676,19 @@ def render_gallery(items: list[dict]) -> str:
         caption_html = (f'<p class="photo-caption">{esc(caption)}</p>' if caption else '')
 
         dim_attrs = (' width="' + str(p['meta'].get('width')) + '" height="' + str(p['meta'].get('height')) + '"') if p['meta'].get('width') else ''
-        parts.append(f"""<div class="gallery-item">
+        # Emitimos `class="loaded"` en <li> y `class="visible"` en <img>
+        # para que el CSS del blog (photos-masonry.css) muestre la foto
+        # inmediatamente sin esperar al JS de loading que el blog usa.
+        parts.append(f"""<li class="loaded">
   <a href="{esc(photo_url(p['status_id']))}">
-    <img src="{esc(p['preview_url'])}" alt="{esc(p['alt_text'])}" loading="lazy"{dim_attrs}>
+    <img src="{esc(p['preview_url'])}" alt="{esc(p['alt_text'])}" loading="lazy" class="visible"{dim_attrs}>
     <div class="photo-info">
       {caption_html}
       {meta_line}
     </div>
   </a>
-</div>""")
-    return f'<div class="gallery">\n{"".join(parts)}\n</div>'
+</li>""")
+    return f'<ul class="masonry-grid">\n{"".join(parts)}\n</ul>'
 
 
 def render_pagination(current_page: int, total_pages: int) -> str:
