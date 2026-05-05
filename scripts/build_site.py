@@ -477,7 +477,6 @@ def head(title: str, description: str, canonical: str, og_image: str | None = No
       <li class="nav-item"><a href="{PARENT_URL}/lecturas/">Lecturas</a></li>
       <li class="nav-item"><a href="{PARENT_URL}/mastodon/">Cortos</a></li>
       <li class="nav-item"><a href="{PARENT_URL}/hispania-obscura/">Libros</a></li>
-      <li class="nav-item"><a href="{PARENT_URL}/loops/">Loops</a></li>
     </ul>
     <div class="hamburger" aria-label="Abrir menú" role="button" tabindex="0">
       <span class="bar"></span>
@@ -878,6 +877,12 @@ Allow: /
 User-agent: GPTBot
 Allow: /
 
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
 User-agent: ClaudeBot
 Allow: /
 
@@ -887,7 +892,31 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
+User-agent: CopilotBot
+Allow: /
+
 User-agent: Google-Extended
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+User-agent: Google-Agent
+Allow: /
+
+User-agent: Google-NotebookLM
+Allow: /
+
+User-agent: MistralAI-User
+Allow: /
+
+User-agent: MistralAI-Index
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Meta-ExternalFetcher
 Allow: /
 
 User-agent: CCBot
