@@ -34,6 +34,7 @@ PER_PAGE = 20
 SLEEP = 0.5
 TIMEOUT = 60
 MAX_RETRIES = 4
+MAX_COLLECTION_PAGES = 50
 
 
 def load_env() -> dict[str, str]:
@@ -176,12 +177,25 @@ def fetch_collections(instance: str, account_id: str, token: str) -> list[dict]:
 
 
 def fetch_collection_items(instance: str, collection_id: str, token: str) -> list[str]:
-    """Devuelve lista de status_ids de una colección via /api/v1.1/collections/items/{id}."""
+    """Devuelve todos los status_ids de una colección via /api/v1.1/collections/items/{id}."""
     url = f"https://{instance}/api/v1.1/collections/items/{collection_id}"
     headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
-    r = requests.get(url, headers=headers, timeout=TIMEOUT)
-    r.raise_for_status()
-    return [item["id"] for item in r.json()]
+    status_ids = []
+    seen = set()
+    for page in range(1, MAX_COLLECTION_PAGES + 1):
+        r = requests.get(url, headers=headers, params={"page": page}, timeout=TIMEOUT)
+        r.raise_for_status()
+        items = r.json()
+        if not items:
+            return status_ids
+        for item in items:
+            sid = str(item["id"])
+            if sid in seen:
+                continue
+            seen.add(sid)
+            status_ids.append(sid)
+        time.sleep(SLEEP)
+    raise RuntimeError(f"colección {collection_id}: demasiadas páginas ({MAX_COLLECTION_PAGES})")
 
 
 def main() -> None:
