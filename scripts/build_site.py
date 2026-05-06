@@ -41,6 +41,14 @@ AUTHOR_ID = "https://impermanente.es/about/#person"
 SERIES_ID = f"{SITE_URL}/#series"
 PHOTOS_PER_PAGE = 30
 LICENSE_URL = "https://creativecommons.org/licenses/by/4.0/"
+COLLECTION_ORDER = [
+    "umbrales",
+    "ciudades",
+    "oubal",
+    "por-la-calle",
+    "dorado",
+    "psicopompo",
+]
 
 
 # ---------- Utility ----------
@@ -60,6 +68,16 @@ def load_jsonl(path: Path) -> list[dict]:
                 continue
             out.append(json.loads(line))
     return out
+
+
+def sort_collections(collections: list[dict]) -> list[dict]:
+    order = {slug: pos for pos, slug in enumerate(COLLECTION_ORDER)}
+    unknown_pos = len(order)
+    sorted_with_index = sorted(
+        enumerate(collections),
+        key=lambda item: (order.get(item[1].get("slug"), unknown_pos), item[0]),
+    )
+    return [collection for _, collection in sorted_with_index]
 
 
 def fallback_alt(content_text: str | None, place: dict | None) -> str:
@@ -1041,7 +1059,7 @@ def main() -> None:
     if not items:
         raise SystemExit("No hay records en data/inventory.jsonl. Ejecuta fetch_inventory.py primero.")
 
-    collections = load_jsonl(COLLECTIONS_PATH)
+    collections = sort_collections(load_jsonl(COLLECTIONS_PATH))
 
     build(args.out, items, collections)
     print(f"Sitio generado en {args.out}/")
