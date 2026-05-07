@@ -183,15 +183,19 @@ main {
 
 /* Texto introductorio centrado, en serif del blog */
 .page-intro {
-  font-family: var(--serif);
-  font-size: 1.7rem;
-  font-weight: var(--weight-light, 300);
-  line-height: 1.6;
-  letter-spacing: 0.3px;
-  color: var(--text);
   text-align: center;
   max-width: var(--text-width, 620px);
   margin: 0 auto 30px;
+}
+.page-intro p {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  font-weight: var(--weight-light, 300);
+  line-height: 1.55;
+  letter-spacing: 0.3px;
+  color: var(--text);
+  max-width: var(--text-width, 620px);
+  margin: 0 auto;
 }
 
 .section-divider {
@@ -440,6 +444,7 @@ body.photo-page main {
 /* === Mobile === */
 @media (max-width: 768px) {
   main { padding: 40px 16px 30px; }
+  .page-intro p { font-size: 1.8rem; }
   .masonry-grid .photo-caption { font-size: 1.2rem; }
   .photo-page .photo-text { font-size: 1.7rem; }
   h2.section-title { font-size: 1.7rem; }
