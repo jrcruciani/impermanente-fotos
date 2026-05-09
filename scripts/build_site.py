@@ -298,6 +298,10 @@ h2.section-title {
   margin: 0 !important;
   transition: opacity 0.2s ease;
 }
+.masonry-grid img.u-photo {
+  width: 100% !important;
+  height: auto !important;
+}
 .masonry-grid li a:hover img {
   opacity: 0.92;
   filter: none;
@@ -401,6 +405,10 @@ body.photo-page main {
   height: auto;
   border-radius: 0 !important;
   margin: 0 !important;
+}
+.photo-page .photo-hero img.u-photo {
+  width: auto !important;
+  height: auto !important;
 }
 .photo-page .photo-text {
   font-family: var(--serif);
