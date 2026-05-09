@@ -206,7 +206,7 @@ main {
   margin: 40px auto;
 }
 
-h2.section-title {
+.section-title {
   font-family: var(--sans);
   font-size: 2rem;
   font-weight: var(--weight-light, 300);
@@ -467,7 +467,7 @@ body.photo-page main {
   .page-intro p { font-size: 1.8rem; }
   .masonry-grid .photo-caption { font-size: 1.2rem; }
   .photo-page .photo-text { font-size: 1.7rem; }
-  h2.section-title { font-size: 1.7rem; }
+  .section-title { font-size: 1.7rem; }
 }
 """
 
@@ -867,7 +867,7 @@ def render_index_page(page: int, total_pages: int, page_items: list[dict],
             body += render_collections(collections or [])
         body += '<h2 class="section-title">Últimas fotos</h2>\n'
     else:
-        body += f'<h1>Archivo de fotos · página {page}</h1>\n'
+        body += f'<h1 class="section-title">Archivo de fotos · página {page}</h1>\n'
 
     body += render_gallery(page_items)
     body += render_pagination(page, total_pages)
