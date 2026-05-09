@@ -523,6 +523,7 @@ def head(title: str, description: str, canonical: str, og_image: str | None = No
     </a></h1>
     <ul class="nav-menu">
       <li class="nav-item"><a href="{PARENT_URL}/about/">Acerca de</a></li>
+      <li class="nav-item"><a href="{PARENT_URL}/blog/">Blog</a></li>
       <li class="nav-item"><a href="{SITE_URL}/" class="current">Fotos</a></li>
       <li class="nav-item"><a href="{PARENT_URL}/viajes/">Viajes</a></li>
       <li class="nav-item"><a href="{PARENT_URL}/lecturas/">Lecturas</a></li>
