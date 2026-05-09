@@ -452,6 +452,26 @@ body.photo-page main {
 """
 
 
+WIREBOARD_TAG = """<!-- wireboard tag -->
+<script type="text/javascript">
+;(function(w,i,r,e,b,oar,d){if(!w[b]){w.WireBoardNamespace=w.WireBoardNamespace||[];
+w.WireBoardNamespace.push(b);w[b]=function(){(w[b].q=w[b].q||[]).push(arguments)};
+w[b].q=w[b].q||[];oar=i.createElement(r);d=i.getElementsByTagName(r)[0];oar.async=1;
+oar.src=e;d.parentNode.insertBefore(oar,d)}}(window,document,"script","https://static.wireboard.io/wireboard.js","wireboard"));
+wireboard('newTracker', 'wb', 'pipeline-0.collector.wireboard.io', {
+    appId: 'cmOvSUIF',
+    forceSecureTracker: true,
+    useCookies: false,
+    contexts: {
+      performanceTiming: true,
+    }
+});
+window.wireboard('enableActivityTracking', 5, 10);
+var customContext=[{schema:'wb:io.wireboard/publisher',data:{publisher:'4efd8f4e-cc94-4802-a6bd-92ebecce357f'}}]
+window.wireboard('trackPageView', null, customContext);
+</script>"""
+
+
 def head(title: str, description: str, canonical: str, og_image: str | None = None,
         extra_jsonld: list[dict] | None = None, body_class: str = "") -> str:
     jsonld_blocks = ""
@@ -462,6 +482,7 @@ def head(title: str, description: str, canonical: str, og_image: str | None = No
     return f"""<!DOCTYPE html>
 <html lang="es">
 <head>
+{WIREBOARD_TAG}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)}</title>
