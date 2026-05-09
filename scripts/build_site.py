@@ -319,6 +319,17 @@ h2.section-title {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 .masonry-grid .photo-meta-line {
   font-family: var(--sans);
   font-size: 0.95rem;
@@ -586,17 +597,22 @@ def jsonld_website() -> dict:
 def jsonld_imageobject(p: dict) -> dict:
     """Un ImageObject completo por foto."""
     node = {
-        "@type": "ImageObject",
+        "@type": ["ImageObject", "Photograph"],
         "@id": photo_url(p["status_id"]) + "#image",
         "contentUrl": p["image_url"],
         "thumbnailUrl": p["preview_url"],
         "url": photo_url(p["status_id"]),
         "description": p["alt_text"],
+        "creditText": AUTHOR_NAME,
+        "copyrightNotice": f"© {AUTHOR_NAME}",
         "license": LICENSE_URL,
         "creator": {"@id": AUTHOR_ID},
         "isPartOf": {"@id": SERIES_ID},
         "inLanguage": "es",
     }
+    caption = (p.get("content_text") or "").strip().split("\n")[0]
+    if caption:
+        node["caption"] = caption
     if p.get("created_at"):
         node["datePublished"] = p["created_at"]
     if p.get("place"):
@@ -760,21 +776,18 @@ def render_gallery(items: list[dict]) -> str:
     parts = []
     for p in items:
         date = fmt_date_es(p.get("created_at"))
+        date_iso = p.get("created_at") or ""
         place_str = fmt_place(p.get("place"))
-        # Caption: prioriza el contenido escrito por el autor; si no hay,
-        # usa el alt-text real. Si solo hay fallback genérico, no muestra
-        # caption (evita "Foto en Lima" feo durante la ventana sin alt-text).
-        caption = (p.get("content_text") or "").strip().split("\n")[0]
-        if not caption and p.get("alt_is_real"):
-            caption = p["alt_text"][:120]
+        entry_name = (p.get("content_text") or "").strip().split("\n")[0]
+        if not entry_name:
+            entry_name = p["alt_text"][:80].rstrip(",;:.")
 
         meta_parts = []
         if place_str:
-            meta_parts.append(f'<span class="photo-place">{esc(place_str)}</span>')
+            meta_parts.append(f'<span class="photo-place p-location">{esc(place_str)}</span>')
         if date:
-            meta_parts.append(esc(date))
+            meta_parts.append(f'<time class="dt-published" datetime="{esc(date_iso)}">{esc(date)}</time>')
         meta_line = ('<span class="photo-meta-line">' + ' · '.join(meta_parts) + '</span>') if meta_parts else ''
-        caption_html = (f'<p class="photo-caption">{esc(caption)}</p>' if caption else '')
 
         dim_attrs = (' width="' + str(p['meta'].get('width')) + '" height="' + str(p['meta'].get('height')) + '"') if p['meta'].get('width') else ''
         # Galería: usa thumb local (1024px max, aspect natural) si existe.
@@ -784,16 +797,16 @@ def render_gallery(items: list[dict]) -> str:
         # Emitimos `class="loaded"` en <li> y `class="visible"` en <img>
         # para que el CSS del blog (photos-masonry.css) muestre la foto
         # inmediatamente sin esperar al JS de loading que el blog usa.
-        parts.append(f"""<li class="loaded">
-  <a href="{esc(photo_url(p['status_id']))}">
-    <img src="{esc(thumb_src)}" alt="{esc(p['alt_text'])}" loading="lazy" class="visible"{dim_attrs}>
+        parts.append(f"""<li class="loaded h-entry">
+  <a href="{esc(photo_url(p['status_id']))}" class="u-url">
+    <img src="{esc(thumb_src)}" alt="{esc(p['alt_text'])}" loading="lazy" class="visible u-photo"{dim_attrs}>
+    <span class="p-name visually-hidden" aria-hidden="true">{esc(entry_name)}</span>
     <div class="photo-info">
-      {caption_html}
       {meta_line}
     </div>
   </a>
 </li>""")
-    return f'<ul class="masonry-grid">\n{"".join(parts)}\n</ul>'
+    return f'<ul class="masonry-grid h-feed">\n{"".join(parts)}\n</ul>'
 
 
 def render_pagination(current_page: int, total_pages: int) -> str:
@@ -838,7 +851,7 @@ def render_index_page(page: int, total_pages: int, page_items: list[dict],
     body = head(title, description, canonical, og_img, extra_jsonld=page_jsonld)
     if page == 1:
         body += f"""<div class="page-intro">
-  <p>Fotografías de umbrales, calle, ciudades, retratos, cementerios y luz dorada: mi manera de mirar lo que está a punto de cambiar, desaparecer o quedarse un segundo más.</p>
+  <p>Archivo curado de fotografías publicadas originalmente en Pixelfed: umbrales, calle, ciudades, retratos, cementerios y luz dorada; mi manera de mirar lo que está a punto de cambiar, desaparecer o quedarse un segundo más.</p>
 </div>
 <hr class="section-divider" aria-hidden="true">
 """
@@ -852,7 +865,7 @@ def render_index_page(page: int, total_pages: int, page_items: list[dict],
     body += render_pagination(page, total_pages)
     body += f"""<div class="pixelfed-cta">
   <a href="{PIXELFED_USER_URL}" target="_blank" rel="noopener" class="btn-pixelfed">
-    Mira la galería completa en Pixelfed
+    Seguir el feed original en Pixelfed
   </a>
 </div>
 """
@@ -884,20 +897,23 @@ def render_photo_page(p: dict, prev_p: dict | None, next_p: dict | None) -> str:
 
     place_str = fmt_place(p.get("place"))
     date_str = fmt_date_es(p.get("created_at"))
+    date_iso = p.get("created_at") or ""
     meta_bits = []
     if place_str:
-        meta_bits.append(esc(place_str))
+        meta_bits.append(f'<span class="p-location">{esc(place_str)}</span>')
     if date_str:
-        meta_bits.append('Publicada el ' + esc(date_str))
+        meta_bits.append(f'Publicada el <time class="dt-published" datetime="{esc(date_iso)}">{esc(date_str)}</time>')
     meta_bits.append(f'<a href="{esc(p["status_url"])}" target="_blank" rel="noopener">Ver en Pixelfed</a>')
 
-    body += f"""<article>
+    body += f"""<article class="h-entry">
+  <h1 class="p-name visually-hidden">{esc(title_short)}</h1>
+  <a href="{esc(canonical)}" class="u-url visually-hidden" tabindex="-1" aria-hidden="true">Permalink</a>
   <div class="photo-hero">
     <a href="{esc(p['image_url'])}" rel="noopener">
-      <img src="{esc(p['image_url'])}" alt="{esc(p['alt_text'])}" loading="eager"{dim_attrs}>
+      <img src="{esc(p['image_url'])}" alt="{esc(p['alt_text'])}" loading="eager" class="u-photo"{dim_attrs}>
     </a>
   </div>
-  <div class="photo-text">
+  <div class="photo-text e-content">
     {esc(p['alt_text'])}
   </div>
   <div class="photo-meta">
