@@ -15,7 +15,7 @@ Filosofía:
   - HTML completo en cada página (sin JS para mostrar fotos).
   - Alt-text completo en `<img alt>` y JSON-LD ImageObject por foto.
   - Visualmente alineado con impermanente.es (mismo CSS embebido).
-  - Sin tracking, sin tipografías externas más allá de las del sitio principal.
+  - Hereda tipografías/estilos del sitio principal y carga Wireboard.
 """
 from __future__ import annotations
 
@@ -36,6 +36,7 @@ SITE_DOMAIN = "fotos.impermanente.es"
 SITE_URL = f"https://{SITE_DOMAIN}"
 PARENT_URL = "https://impermanente.es"
 PIXELFED_USER_URL = "https://pixelfed.social/HispaniaObscura"
+FAVICON_URL = "https://micro.blog/JRCruciani/favicon.png"
 AUTHOR_NAME = "J.R. Cruciani"
 AUTHOR_ID = "https://impermanente.es/about/#person"
 SERIES_ID = f"{SITE_URL}/#series"
@@ -478,6 +479,7 @@ def head(title: str, description: str, canonical: str, og_image: str | None = No
     if extra_jsonld:
         for ld in extra_jsonld:
             jsonld_blocks += f'\n<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>'
+    jsonld_blocks += f'\n<script type="application/ld+json">{json.dumps(jsonld_website(), ensure_ascii=False)}</script>'
     og_img_tag = f'<meta property="og:image" content="{esc(og_image)}">' if og_image else ""
     return f"""<!DOCTYPE html>
 <html lang="es">
@@ -489,7 +491,12 @@ def head(title: str, description: str, canonical: str, og_image: str | None = No
 <meta name="description" content="{esc(description)}">
 <meta name="author" content="{esc(AUTHOR_NAME)}">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#20232a" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="{esc(canonical)}">
+<link rel="icon" href="{FAVICON_URL}" type="image/png">
+<link rel="shortcut icon" href="{FAVICON_URL}" type="image/png">
+<link rel="apple-touch-icon" href="{FAVICON_URL}">
 <link rel="preload stylesheet" as="style" href="{PARENT_URL}/css/fonts.css">
 <link rel="preload stylesheet" as="style" href="{PARENT_URL}/css/main.css">
 <link rel="preload stylesheet" as="style" href="{PARENT_URL}/css/photos-masonry.css">
@@ -559,6 +566,22 @@ def footer() -> str:
 
 # ---------- JSON-LD constructors ----------
 
+def jsonld_website() -> dict:
+    return {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": SITE_URL + "/#website",
+        "url": SITE_URL + "/",
+        "name": "impermanente — fotos",
+        "description": "Galería estática de fotografías de J.R. Cruciani publicadas originalmente en Pixelfed.",
+        "inLanguage": "es",
+        "author": {"@id": AUTHOR_ID},
+        "publisher": {"@id": AUTHOR_ID},
+        "isPartOf": {"@id": "https://impermanente.es/#website"},
+        "sameAs": PIXELFED_USER_URL,
+    }
+
+
 def jsonld_imageobject(p: dict) -> dict:
     """Un ImageObject completo por foto."""
     node = {
@@ -608,7 +631,7 @@ def jsonld_series_root() -> dict:
             "Fotografía de calle", "Tanatoturismo", "Retrato",
         ],
         "keywords": "umbrales, threshold, pasajes, fotografía documental, fotografía de calle, tanatoturismo, cementerios europeos, golden hour, retrato, J.R. Cruciani",
-        "isPartOf": {"@id": "https://impermanente.es/#website"},
+        "isPartOf": {"@id": SITE_URL + "/#website"},
         "sameAs": PIXELFED_USER_URL,
     }
 
