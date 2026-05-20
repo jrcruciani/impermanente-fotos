@@ -1,0 +1,842 @@
+[
+  {
+    "id": "962612238465228708",
+    "url": "https://pixelfed.social/p/HispaniaObscura/962612238465228708",
+    "created_at": "2026-05-20T07:17:22.000Z",
+    "content_text": "",
+    "place": {
+      "id": 7133,
+      "slug": "brussels",
+      "name": "Brussels",
+      "country": "Belgium"
+    },
+    "media_attachments": [
+      {
+        "id": "42889774",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/0d402c64b-2701fc/UO7GLHjWwVBB/ZoqnYBaL4PGnOkghXOaPCTKsow73I5rIlo7hbcQb.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/0d402c64b-2701fc/UO7GLHjWwVBB/ZoqnYBaL4PGnOkghXOaPCTKsow73I5rIlo7hbcQb_thumb.jpg",
+        "description": "Galería cubierta con bóveda de vidrio, fachadas color crema y una fila de farolas negras que bajan por ambos lados hasta el suelo brillante. Las estatuas se repiten en los muros como vigilantes cansados, mientras una figura sobre el reloj corta la simetría desde arriba. El pasaje parece solemne, pero lo salvan los cierres metálicos y los letreros de tienda.",
+        "blurhash": "UNF#%Lof00WB_4ofMcaxObj[i^j[ogj[obj[",
+        "meta": {
+          "width": 1013,
+          "height": 1350,
+          "size": "1013x1350",
+          "aspect": 0.7503703703703704
+        }
+      }
+    ]
+  },
+  {
+    "id": "962455685507723599",
+    "url": "https://pixelfed.social/p/HispaniaObscura/962455685507723599",
+    "created_at": "2026-05-19T20:55:16.000Z",
+    "content_text": "",
+    "place": {
+      "id": 7133,
+      "slug": "brussels",
+      "name": "Brussels",
+      "country": "Belgium"
+    },
+    "media_attachments": [
+      {
+        "id": "42878174",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/0d402c64b-2701fc/fSasoiFK9sun/p3GSkmJjz4rHHXaAMS1ZDMlm4K4eJEBLS5ZzHh6c.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/0d402c64b-2701fc/fSasoiFK9sun/p3GSkmJjz4rHHXaAMS1ZDMlm4K4eJEBLS5ZzHh6c_thumb.jpg",
+        "description": "Una torre gótica se levanta al fondo de una calle estrecha, encajada entre fachadas de ladrillo, escaparates y toldos de terraza bajo un cielo gris. El adoquinado lleva la mirada hacia la aguja dorada, como si la ciudad entera se hubiese apartado lo justo para dejarla aparecer. Verticalidad sin épica: piedra, comercio y nubes negociando sitio.",
+        "blurhash": "UVI4^b?b0KD%_NxvROe-kXj[oKt7s.oekCkD",
+        "meta": {
+          "width": 886,
+          "height": 1350,
+          "size": "886x1350",
+          "aspect": 0.6562962962962963
+        }
+      }
+    ]
+  },
+  {
+    "id": "956582285382190682",
+    "url": "https://pixelfed.social/p/HispaniaObscura/956582285382190682",
+    "created_at": "2026-05-03T15:56:29.000Z",
+    "content_text": "",
+    "place": {
+      "id": 83079,
+      "slug": "lima",
+      "name": "Lima",
+      "country": "Peru"
+    },
+    "media_attachments": [
+      {
+        "id": "42306265",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/0d402c64b-2701fc/4BrSbO1TjQ0N/2rpLv6tJpO1RHs9rSKfQPzp6ow95WOhHedTf6wN3.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/0d402c64b-2701fc/4BrSbO1TjQ0N/2rpLv6tJpO1RHs9rSKfQPzp6ow95WOhHedTf6wN3_thumb.jpg",
+        "description": "Un poste de servicios saturado de cables eléctricos y de telecomunicaciones que se enroscan y cuelgan en múltiples direcciones, formando un entramado caótico frente a un cielo despejado y árboles al fondo.",
+        "blurhash": "UDJH]v4n~q_3D%t7IUt74nD%IUof~qt7M{t7",
+        "meta": {
+          "width": 946,
+          "height": 1350,
+          "size": "946x1350",
+          "aspect": 0.7007407407407408
+        }
+      }
+    ]
+  },
+  {
+    "id": "955881786576642347",
+    "url": "https://pixelfed.social/p/HispaniaObscura/955881786576642347",
+    "created_at": "2026-05-01T17:32:57.000Z",
+    "content_text": "",
+    "place": {
+      "id": 31427,
+      "slug": "madrid",
+      "name": "Madrid",
+      "country": "Spain"
+    },
+    "media_attachments": [
+      {
+        "id": "42237889",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/0d402c64b-2701fc/eNhu2LyufQtt/cVcyUd0TRN6eDymmbAR5p1NpjLI7SXbgklCE1Av4.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/0d402c64b-2701fc/eNhu2LyufQtt/cVcyUd0TRN6eDymmbAR5p1NpjLI7SXbgklCE1Av4_thumb.jpg",
+        "description": "Interior de un centro comercial en blanco y negro: estructura metálica vista, barandillas con malla, vigas y conductos al aire. Dos plantas de tiendas se asoman al hueco central; abajo, las personas, apenas reconocibles, se desparraman por el suelo brillante. La luz cenital es la de un sitio donde nadie sabe qué hora es.",
+        "blurhash": "U4BWe~%M~qIU00?bay-;-;ay-;M{j[%MIU-;",
+        "meta": {
+          "width": 1080,
+          "height": 1190,
+          "size": "1080x1190",
+          "aspect": 0.907563025210084
+        }
+      }
+    ]
+  },
+  {
+    "id": "955880223920811190",
+    "url": "https://pixelfed.social/p/HispaniaObscura/955880223920811190",
+    "created_at": "2026-05-01T17:26:44.000Z",
+    "content_text": "",
+    "place": {
+      "id": 31427,
+      "slug": "madrid",
+      "name": "Madrid",
+      "country": "Spain"
+    },
+    "media_attachments": [
+      {
+        "id": "42237613",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/0d402c64b-2701fc/39BPxYcjvouk/EGyzWsab9rDtFUjjWjhvKaL62J0UDrhJnwvNQTiH.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/0d402c64b-2701fc/39BPxYcjvouk/EGyzWsab9rDtFUjjWjhvKaL62J0UDrhJnwvNQTiH_thumb.jpg",
+        "description": "Vista desde abajo de una cubierta tensada: triángulos y hexágonos de acero se entrelazan en una retícula que sostiene la membrana del techo. De los nodos cuelgan luminarias circulares como anillos suspendidos en el aire. La estructura, en blanco y negro, se vuelve un dibujo de nervios sin órgano que los anime.",
+        "blurhash": "U3B:vz_3RjayofWBj[M{D%D%?b~q9FRj%MRj",
+        "meta": {
+          "width": 1585,
+          "height": 1080,
+          "size": "1585x1080",
+          "aspect": 1.4675925925925926
+        }
+      }
+    ]
+  },
+  {
+    "id": "955571981829668244",
+    "url": "https://pixelfed.social/p/HispaniaObscura/955571981829668244",
+    "created_at": "2026-04-30T21:01:54.000Z",
+    "content_text": "",
+    "place": {
+      "id": 80719,
+      "slug": "amsterdam",
+      "name": "Amsterdam",
+      "country": "Netherlands"
+    },
+    "media_attachments": [
+      {
+        "id": "42207568",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/ajmc5XqSDfkV/YCcyt0QsMjWvCCYZSHi1mPnfFoMKbFPrOjLcKsR4.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/ajmc5XqSDfkV/YCcyt0QsMjWvCCYZSHi1mPnfFoMKbFPrOjLcKsR4_thumb.jpg",
+        "description": "Retrato de una mujer joven; un mechón cruza su cara y los ojos se sostienen en cámara sin sonrisa de cortesía. El suéter negro tiene una franja roja vertical en el hombro. Detrás, fachadas estrechas y altas se alinean en hilera sobre un canal de aguas quietas, con un bote rojo asomando al margen.",
+        "blurhash": "UBEour00yDXm_3?bNF9F?wMx$*$*NwNGofxY",
+        "meta": {
+          "width": 1026,
+          "height": 1350,
+          "size": "1026x1350",
+          "aspect": 0.76
+        }
+      }
+    ]
+  },
+  {
+    "id": "952637203922742602",
+    "url": "https://pixelfed.social/p/HispaniaObscura/952637203922742602",
+    "created_at": "2026-04-22T18:40:08.000Z",
+    "content_text": "",
+    "place": {
+      "id": 41012,
+      "slug": "dijon",
+      "name": "Dijon",
+      "country": "France"
+    },
+    "media_attachments": [
+      {
+        "id": "41922199",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/fGfkQZCwXQmA/hYW40npD1HW7b4wturmzYpfz5DtrzvrJX0dbBxui.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/fGfkQZCwXQmA/hYW40npD1HW7b4wturmzYpfz5DtrzvrJX0dbBxui_thumb.jpg",
+        "description": "Pasaje cubierto con techo de vigas de madera oscura y paredes encaladas; el suelo de adoquines pulidos baja en pendiente suave hacia un patio iluminado al otro extremo. Al fondo, fachadas claras de tejado rojizo aparecen recortadas por el arco de salida. El umbral hace de visor: encuadra el día que viene desde fuera.",
+        "blurhash": "U88Na[j[00M|D%WB%MbH00ay~pt6%MfRIVj[",
+        "meta": {
+          "width": 1080,
+          "height": 1326,
+          "size": "1080x1326",
+          "aspect": 0.8144796380090498
+        }
+      }
+    ]
+  },
+  {
+    "id": "951938986348464232",
+    "url": "https://pixelfed.social/p/HispaniaObscura/951938986348464232",
+    "created_at": "2026-04-20T20:25:40.000Z",
+    "content_text": "",
+    "place": {
+      "id": 33175,
+      "slug": "barcelona",
+      "name": "Barcelona",
+      "country": "Spain"
+    },
+    "media_attachments": [
+      {
+        "id": "41856018",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/bys3r5sDvRbV/V3aqbGoD8k1IvlyCIiK13vwvRH6DDzkWGBRHgVs8.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/bys3r5sDvRbV/V3aqbGoD8k1IvlyCIiK13vwvRH6DDzkWGBRHgVs8_thumb.jpg",
+        "description": "Conjunto funerario en un cementerio: una figura femenina velada, tallada en piedra ocre, se inclina junto a un sarcófago rematado con un ramo de flores en relieve. Detrás se eleva otro panteón coronado por una cruz, y entre las nubes el sol abre un haz directo. La piedra parece más viva que las flores que ya no están.",
+        "blurhash": "UIF=:c?cE1IU.Tx]IpIWyE%NxYxuIUIUkD%M",
+        "meta": {
+          "width": 1080,
+          "height": 1112,
+          "size": "1080x1112",
+          "aspect": 0.9712230215827338
+        }
+      }
+    ]
+  },
+  {
+    "id": "951496264194022130",
+    "url": "https://pixelfed.social/p/HispaniaObscura/951496264194022130",
+    "created_at": "2026-04-19T15:06:27.000Z",
+    "content_text": "",
+    "place": {
+      "id": 51560,
+      "slug": "budapest",
+      "name": "Budapest",
+      "country": "Hungary"
+    },
+    "media_attachments": [
+      {
+        "id": "41812706",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/Pze2gAVrVpzI/Kc0AjfZ9slscMxo7EKKlZLm8pytHX6ORFezWnZzk.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/Pze2gAVrVpzI/Kc0AjfZ9slscMxo7EKKlZLm8pytHX6ORFezWnZzk_thumb.jpg",
+        "description": "Un edificio neogótico se asoma sobre el río con su cúpula y sus torres caladas; al frente, las aguas tranquilas reciben el reflejo de la mañana clara. A la derecha, una columna del torreón desde donde se mira recorta la escena con su piedra trabajada. Al fondo, la ciudad se extiende plana hasta donde la curva del río la pierde.",
+        "blurhash": "USG+UO0.=;9xB@bxw@kDE4Rlodafv}o0S4jY",
+        "meta": {
+          "width": 1127,
+          "height": 1080,
+          "size": "1127x1080",
+          "aspect": 1.0435185185185185
+        }
+      }
+    ]
+  },
+  {
+    "id": "951496185606142652",
+    "url": "https://pixelfed.social/p/HispaniaObscura/951496185606142652",
+    "created_at": "2026-04-19T15:06:08.000Z",
+    "content_text": "",
+    "place": {
+      "id": 51560,
+      "slug": "budapest",
+      "name": "Budapest",
+      "country": "Hungary"
+    },
+    "media_attachments": [
+      {
+        "id": "41812686",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/MUDlUROf8vfN/fbXggx85ldahRvFu7ut9GgfFzPJf8oeuvvGDywjJ.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/MUDlUROf8vfN/fbXggx85ldahRvFu7ut9GgfFzPJf8oeuvvGDywjJ_thumb.jpg",
+        "description": "El mismo edificio neogótico, ahora de noche y encendido en dorado de tungsteno; la fachada arde sobre el río que devuelve el reflejo en cintas alargadas. A la derecha, el chapitel de una iglesia recorta la escena en silueta contra un cielo todavía azul. La luz artificial dura lo que dura el contrato eléctrico.",
+        "blurhash": "UQG*1o$$9}Iu76WXsooe0rR-xWt3}?o0s+o0",
+        "meta": {
+          "width": 1563,
+          "height": 1080,
+          "size": "1563x1080",
+          "aspect": 1.4472222222222222
+        }
+      }
+    ]
+  },
+  {
+    "id": "951496092302965373",
+    "url": "https://pixelfed.social/p/HispaniaObscura/951496092302965373",
+    "created_at": "2026-04-19T15:05:46.000Z",
+    "content_text": "",
+    "place": {
+      "id": 51560,
+      "slug": "budapest",
+      "name": "Budapest",
+      "country": "Hungary"
+    },
+    "media_attachments": [
+      {
+        "id": "41812672",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/YHSd7JJiJ59u/inoWC9n3bk8fSVxC8kjc47xvzlbCsM08PXO1008H.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/YHSd7JJiJ59u/inoWC9n3bk8fSVxC8kjc47xvzlbCsM08PXO1008H_thumb.jpg",
+        "description": "Una mujer joven, sentada entre dos columnas de piedra clara, mira hacia la cámara mientras se baja las gafas de sol. Suéter negro, falda corta de cuero, medias rojas y zapatos a juego: la nota de color queda concentrada en sus piernas. Detrás, una ciudad ribereña se enciende en luz de tarde mientras ella decide cuándo mirar.",
+        "blurhash": "UkGl3CR-9axt~pozIUt6tloJV@WCJBn$nhWX",
+        "meta": {
+          "width": 1003,
+          "height": 1350,
+          "size": "1003x1350",
+          "aspect": 0.7429629629629629
+        }
+      }
+    ]
+  },
+  {
+    "id": "948262863034645791",
+    "url": "https://pixelfed.social/p/HispaniaObscura/948262863034645791",
+    "created_at": "2026-04-10T16:58:04.000Z",
+    "content_text": "",
+    "place": {
+      "id": 82459,
+      "slug": "miraflores",
+      "name": "Miraflores",
+      "country": "Peru"
+    },
+    "media_attachments": [
+      {
+        "id": "41500001",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/rjTet0BzeSPY/LXvlmfOjVUtFzlFWSmb5BOObp24rdt1sREXgA0ey.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/rjTet0BzeSPY/LXvlmfOjVUtFzlFWSmb5BOObp24rdt1sREXgA0ey_thumb.jpg",
+        "description": "Una estatua de Paddington con la bandera del Reino Unido en el pecho preside un paseo marítimo desde su pedestal de piedra; detrás, el océano gris se pierde sin barcos a la vista. A los pies del monumento, una mujer con sombrero ancho de fieltro y pollera de varios colores organiza muñecos de tela en una cesta para venderlos. Dos turismos del mismo paisaje, sin tocarse.",
+        "blurhash": "UiF$nvV@o}%MY8aeozbw%hs.R%S4RkWWWCn%",
+        "meta": {
+          "width": 887,
+          "height": 1350,
+          "size": "887x1350",
+          "aspect": 0.6570370370370371
+        }
+      }
+    ]
+  },
+  {
+    "id": "946495018612846545",
+    "url": "https://pixelfed.social/p/HispaniaObscura/946495018612846545",
+    "created_at": "2026-04-05T19:53:17.000Z",
+    "content_text": "",
+    "place": {
+      "id": 41426,
+      "slug": "clermont-ferrand",
+      "name": "Clermont-Ferrand",
+      "country": "France"
+    },
+    "media_attachments": [
+      {
+        "id": "41330947",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/iqIgm2wEqjxX/5BNdwmyU8jWkANCJESWliobSKo7rZZlYbJSRbjA6.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/iqIgm2wEqjxX/5BNdwmyU8jWkANCJESWliobSKo7rZZlYbJSRbjA6_thumb.jpg",
+        "description": "Interior gótico en penumbra: una vidriera con rosetón y dos lancetas figurativas se enciende en azules y rojos contra la pared oscura. Bajo ella, una estatua de Virgen con Niño se sostiene en silueta sobre un mar de velas votivas que arden a sus pies. La luz de cera dura menos que la luz pintada de hace siglos.",
+        "blurhash": "U59QUENF00?HyGWBDgS4Mv%2%3IU-=S49ZV@",
+        "meta": {
+          "width": 1080,
+          "height": 1343,
+          "size": "1080x1343",
+          "aspect": 0.8041697691734921
+        }
+      }
+    ]
+  },
+  {
+    "id": "946135976534940773",
+    "url": "https://pixelfed.social/p/HispaniaObscura/946135976534940773",
+    "created_at": "2026-04-04T20:06:35.000Z",
+    "content_text": "",
+    "place": {
+      "id": 41426,
+      "slug": "clermont-ferrand",
+      "name": "Clermont-Ferrand",
+      "country": "France"
+    },
+    "media_attachments": [
+      {
+        "id": "41295701",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/FW7yd2lmrPS1/eVLNSEk6g7gkBCOz2uzh7mnpwGv7YxmBd0CYEfUJ.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/FW7yd2lmrPS1/eVLNSEk6g7gkBCOz2uzh7mnpwGv7YxmBd0CYEfUJ_thumb.jpg",
+        "description": "Mausoleo neoclásico en mármol blanco con escudo heráldico tallado en el frontón y reja de hierro forjado en arabescos sobre la puerta. Lo flanquean otras tumbas y una cruz negra de hierro asoma a la izquierda. La filigrana del cierre dura más que el apellido grabado encima.",
+        "blurhash": "U6F$O*0000jY~pR.JX%MbxRj9atR-;R*t8M{",
+        "meta": {
+          "width": 900,
+          "height": 1350,
+          "size": "900x1350",
+          "aspect": 0.6666666666666666
+        }
+      }
+    ]
+  },
+  {
+    "id": "946112302802278011",
+    "url": "https://pixelfed.social/p/HispaniaObscura/946112302802278011",
+    "created_at": "2026-04-04T18:32:30.000Z",
+    "content_text": "",
+    "place": {
+      "id": 41012,
+      "slug": "dijon",
+      "name": "Dijon",
+      "country": "France"
+    },
+    "media_attachments": [
+      {
+        "id": "41293259",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/JkWSbpRQ48Io/oUZkvK8sdQIAein88LrbBAiRij5fBYI9JzTuJt1g.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/JkWSbpRQ48Io/oUZkvK8sdQIAein88LrbBAiRij5fBYI9JzTuJt1g_thumb.jpg",
+        "description": "Vista enfilada de dos arcos: uno grande en primer plano enmarca el segundo, más pequeño y al fondo, que se abre a un patio empedrado. Entre ambos, pilastras estriadas y un suelo enlosado componen una geometría limpia. Cada arco anuncia el siguiente; ningún umbral termina del todo.",
+        "blurhash": "UYC?o{M__4xvRjt8ogRPogj[a#a#xuR*j]of",
+        "meta": {
+          "width": 967,
+          "height": 1350,
+          "size": "967x1350",
+          "aspect": 0.7162962962962963
+        }
+      }
+    ]
+  },
+  {
+    "id": "945777113718296462",
+    "url": "https://pixelfed.social/p/HispaniaObscura/945777113718296462",
+    "created_at": "2026-04-03T20:20:35.000Z",
+    "content_text": "",
+    "place": {
+      "id": 41012,
+      "slug": "dijon",
+      "name": "Dijon",
+      "country": "France"
+    },
+    "media_attachments": [
+      {
+        "id": "41261080",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/Xyp7zOcTT09V/PFZqOjiPN176sIhXaHsGnDCVxxoYXtbZfOgzD954.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/Xyp7zOcTT09V/PFZqOjiPN176sIhXaHsGnDCVxxoYXtbZfOgzD954_thumb.jpg",
+        "description": "Fuente mural antigua: una cabeza de león tallada en piedra alimenta un pitorro de hierro forjado con válvula y rueda, y vierte sobre una pila circular gastada. A la derecha, una hornacina vacía abre un hueco oscuro en la pared encalada. La fuente sigue funcionando aunque ya no haga falta.",
+        "blurhash": "UNI5iDR*-;M{~qoet7%MR-D%WB%Mxuj[WBof",
+        "meta": {
+          "width": 964,
+          "height": 1350,
+          "size": "964x1350",
+          "aspect": 0.7140740740740741
+        }
+      }
+    ]
+  },
+  {
+    "id": "945641135955295561",
+    "url": "https://pixelfed.social/p/HispaniaObscura/945641135955295561",
+    "created_at": "2026-04-03T11:20:15.000Z",
+    "content_text": "",
+    "place": {
+      "id": 38458,
+      "slug": "metz",
+      "name": "Metz",
+      "country": "France"
+    },
+    "media_attachments": [
+      {
+        "id": "41244547",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/sXqXKIP0LLSZ/JUqWanJjrm9fScKjSuLNT99AF9DukPrhZ5jtHYqQ.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/sXqXKIP0LLSZ/JUqWanJjrm9fScKjSuLNT99AF9DukPrhZ5jtHYqQ_thumb.jpg",
+        "description": "Salida de un pasaje hacia una calle estrecha de fachadas claras; al fondo se asoma el rótulo verde de una farmacia y dos farolas de hierro forjado se enroscan sobre la calzada de adoquines. La luz, blanca y plana, deja la calle vacía. El umbral del que se sale es también el visor desde el que se mira.",
+        "blurhash": "URD0AWIU4Tx^~qIUI9tStSRji^ozR*j[t6WV",
+        "meta": {
+          "width": 1080,
+          "height": 1325,
+          "size": "1080x1325",
+          "aspect": 0.8150943396226416
+        }
+      }
+    ]
+  },
+  {
+    "id": "945416472703093352",
+    "url": "https://pixelfed.social/p/HispaniaObscura/945416472703093352",
+    "created_at": "2026-04-02T20:27:32.000Z",
+    "content_text": "",
+    "place": {
+      "id": 24459,
+      "slug": "cochem",
+      "name": "Cochem",
+      "country": "Germany"
+    },
+    "media_attachments": [
+      {
+        "id": "41226480",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/U4HbIZhRvUB1/bDgVupMFEazLiBDsJEaR9DIprxqK2NrOBmkhSfq2.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/U4HbIZhRvUB1/bDgVupMFEazLiBDsJEaR9DIprxqK2NrOBmkhSfq2_thumb.jpg",
+        "description": "Calle estrecha de pueblo al anochecer: faroles de hierro encendidos, banderines de papel triangular tendidos de fachada a fachada y rótulos en gótica decoran la entrada de varias tiendas y bodegas. Las luces interiores tiñen las paredes de ámbar y el cielo todavía guarda algo del azul del día. Hora de cerrar y de seguir bebiendo, las dos a la vez.",
+        "blurhash": "U4AcGA7PI-_}5_.TMwq?0q=}#*56~p4=$fW+",
+        "meta": {
+          "width": 1080,
+          "height": 1344,
+          "size": "1080x1344",
+          "aspect": 0.8035714285714286
+        }
+      }
+    ]
+  },
+  {
+    "id": "945414925132998292",
+    "url": "https://pixelfed.social/p/HispaniaObscura/945414925132998292",
+    "created_at": "2026-04-02T20:21:23.000Z",
+    "content_text": "",
+    "place": {
+      "id": 24459,
+      "slug": "cochem",
+      "name": "Cochem",
+      "country": "Germany"
+    },
+    "media_attachments": [
+      {
+        "id": "41226301",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/W55131FbfrzG/TM2MQP6GINwDyVApV2Kwt984qPZdL2QlQdbkh1Po.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/W55131FbfrzG/TM2MQP6GINwDyVApV2Kwt984qPZdL2QlQdbkh1Po_thumb.jpg",
+        "description": "Pueblo a orillas de un río al anochecer: en lo alto, un castillo iluminado de naranja preside la silueta del valle; abajo, dos barcos de pasaje amarrados se reflejan en el agua negra. Entre el castillo y el muelle, casas con luces interiores y una iglesia de campanario bulboso ordenan la línea del paseo. La hora azul aguanta mientras los barcos esperan a que alguien suba.",
+        "blurhash": "UW8gt5acW9WBT5n#n#f5JGR*oIoI%2ofR*ax",
+        "meta": {
+          "width": 1080,
+          "height": 1205,
+          "size": "1080x1205",
+          "aspect": 0.8962655601659751
+        }
+      }
+    ]
+  },
+  {
+    "id": "945007197167776682",
+    "url": "https://pixelfed.social/p/HispaniaObscura/945007197167776682",
+    "created_at": "2026-04-01T17:21:13.000Z",
+    "content_text": "",
+    "place": {
+      "id": 7135,
+      "slug": "brugge",
+      "name": "Brugge",
+      "country": "Belgium"
+    },
+    "media_attachments": [
+      {
+        "id": "41186111",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/ggHXWkOTwGls/ZCn5uB80ANBGLTP4zOUwSrWb2mu0eoApe4blDJ65.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/ggHXWkOTwGls/ZCn5uB80ANBGLTP4zOUwSrWb2mu0eoApe4blDJ65_thumb.jpg",
+        "description": "Una mujer joven sentada en un parapeto de piedra al borde de un canal estrecho; lleva gafas de sol y la cabeza vuelta hacia un lado, en un gesto pausado. Detrás, una iglesia gótica de ladrillo levanta una torre afilada hasta lo alto del cuadro, con casas de tejado escalonado a la izquierda. Una postal con alguien dentro que no posa para ella.",
+        "blurhash": "UFHB#j0N^*MdT}%fIoxX01s.f+tRv}nhkCxu",
+        "meta": {
+          "width": 917,
+          "height": 1350,
+          "size": "917x1350",
+          "aspect": 0.6792592592592592
+        }
+      }
+    ]
+  },
+  {
+    "id": "944855314474473362",
+    "url": "https://pixelfed.social/p/HispaniaObscura/944855314474473362",
+    "created_at": "2026-04-01T07:17:41.000Z",
+    "content_text": "",
+    "place": {
+      "id": 79786,
+      "slug": "rotterdam",
+      "name": "Rotterdam",
+      "country": "Netherlands"
+    },
+    "media_attachments": [
+      {
+        "id": "41167075",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/hxp2mSS5gYOg/6kdAIE0pyUNDQ8QCgLo4qPcWBEiSI4T1T5XkBMte.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/hxp2mSS5gYOg/6kdAIE0pyUNDQ8QCgLo4qPcWBEiSI4T1T5XkBMte_thumb.jpg",
+        "description": "Una bandera ondeando ocupa la mitad derecha del cuadro: franjas verdes y rojas con una estrella amarilla en el centro. Detrás, una iglesia gótica de ladrillo levanta dos torres y una cubierta a dos aguas contra un cielo de nubes pesadas. La tela tapa parte del templo sin pedirle permiso.",
+        "blurhash": "U#IEw@R*R+of?wWBoeofx]o2oLay$%bbR+ax",
+        "meta": {
+          "width": 1686,
+          "height": 1080,
+          "size": "1686x1080",
+          "aspect": 1.5611111111111111
+        }
+      }
+    ]
+  },
+  {
+    "id": "944853052504199897",
+    "url": "https://pixelfed.social/p/HispaniaObscura/944853052504199897",
+    "created_at": "2026-04-01T07:08:42.000Z",
+    "content_text": "",
+    "place": {
+      "id": 80359,
+      "slug": "gouda",
+      "name": "Gouda",
+      "country": "Netherlands"
+    },
+    "media_attachments": [
+      {
+        "id": "41166844",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/w935Mo5HkIqT/DED3yRTA2plvY6C44EQbaMzPm5TwwiYIsMBcZENa.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/w935Mo5HkIqT/DED3yRTA2plvY6C44EQbaMzPm5TwwiYIsMBcZENa_thumb.jpg",
+        "description": "Un gato atigrado y blanco camina por encima de una lechera de zinc pintada con un paisaje rural; al fondo, una tienda con toldo azul y dos pósters con arcoíris en el escaparate. En el banco morado de la entrada, cojines rojos y rosas esperan a alguien. La calle es de ladrillo rojo y la mañana está parada en el equilibrio del gato.",
+        "blurhash": "UIGR^_-4M_Mzpy-5e:NfNzROs9XTNMnMWAtS",
+        "meta": {
+          "width": 1080,
+          "height": 1227,
+          "size": "1080x1227",
+          "aspect": 0.8801955990220048
+        }
+      }
+    ]
+  },
+  {
+    "id": "944849082350508383",
+    "url": "https://pixelfed.social/p/HispaniaObscura/944849082350508383",
+    "created_at": "2026-04-01T06:52:55.000Z",
+    "content_text": "",
+    "place": {
+      "id": 80719,
+      "slug": "amsterdam",
+      "name": "Amsterdam",
+      "country": "Netherlands"
+    },
+    "media_attachments": [
+      {
+        "id": "41166395",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/WCO96IuwBrt9/b5jBmXqsGPBNodrYsPnbwCAmQjIcKGkS6K1wH85A.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/WCO96IuwBrt9/b5jBmXqsGPBNodrYsPnbwCAmQjIcKGkS6K1wH85A_thumb.jpg",
+        "description": "Una calle nocturna teñida de rojo: rótulos de neón anuncian un cabaret y una sex shop sobre fachadas de ladrillo, y un grupo de personas se detiene a mirar las puertas iluminadas. A la derecha, un canal devuelve los reflejos rojos y azules en cintas alargadas. La iluminación es la del distrito que vive del exceso ajeno.",
+        "blurhash": "U883YM|L-X=fI.bbwIxG0xEyRiIo=foMJTSz",
+        "meta": {
+          "width": 1471,
+          "height": 1080,
+          "size": "1471x1080",
+          "aspect": 1.362037037037037
+        }
+      }
+    ]
+  },
+  {
+    "id": "944848995187542318",
+    "url": "https://pixelfed.social/p/HispaniaObscura/944848995187542318",
+    "created_at": "2026-04-01T06:52:34.000Z",
+    "content_text": "",
+    "place": {
+      "id": 80719,
+      "slug": "amsterdam",
+      "name": "Amsterdam",
+      "country": "Netherlands"
+    },
+    "media_attachments": [
+      {
+        "id": "41166383",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/PSmQy0VDHewj/2MXnkFS5iOOjV7J6WkIxOPrRCpTiw6kpauzRNWX1.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/PSmQy0VDHewj/2MXnkFS5iOOjV7J6WkIxOPrRCpTiw6kpauzRNWX1_thumb.jpg",
+        "description": "Hilera de fachadas estrechas y altas al borde de un canal, encendidas por dentro como un cuento abierto en mitad de la noche. Las luces interiores se descuelgan en cintas amarillas sobre el agua negra; al fondo, una torre de chapitel ilumina su reloj. Un bote amarrado a la derecha completa el plano sin moverse.",
+        "blurhash": "U58:*D58n$tQ0g-nofRj01-nS4sm~U9bsmxu",
+        "meta": {
+          "width": 1620,
+          "height": 1080,
+          "size": "1620x1080",
+          "aspect": 1.5
+        }
+      }
+    ]
+  },
+  {
+    "id": "944848810523265226",
+    "url": "https://pixelfed.social/p/HispaniaObscura/944848810523265226",
+    "created_at": "2026-04-01T06:51:50.000Z",
+    "content_text": "",
+    "place": {
+      "id": 80719,
+      "slug": "amsterdam",
+      "name": "Amsterdam",
+      "country": "Netherlands"
+    },
+    "media_attachments": [
+      {
+        "id": "41166364",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/a04qBIyRiDWO/BXHpDtoJQEECKYTZZX5VbjAx18VJb6iSNlQCU4RE.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/31410d826-759a86/a04qBIyRiDWO/BXHpDtoJQEECKYTZZX5VbjAx18VJb6iSNlQCU4RE_thumb.jpg",
+        "description": "Callejón estrecho de noche con neones de restaurantes asiáticos a ambos lados: rótulos rojos, azules y blancos compiten por la mirada del paseante. Una multitud avanza a contraluz, las caras hundidas en sus móviles o en los letreros. La calle huele a fritura y a sirope dulce sin necesidad de probar nada.",
+        "blurhash": "U48;3~rDDNx@D~a#xutR00O@%hRP_4WAD%R5",
+        "meta": {
+          "width": 1080,
+          "height": 1139,
+          "size": "1080x1139",
+          "aspect": 0.9482001755926251
+        }
+      }
+    ]
+  },
+  {
+    "id": "944278855167282470",
+    "url": "https://pixelfed.social/p/HispaniaObscura/944278855167282470",
+    "created_at": "2026-03-30T17:07:02.000Z",
+    "content_text": "",
+    "place": {
+      "id": 7135,
+      "slug": "brugge",
+      "name": "Brugge",
+      "country": "Belgium"
+    },
+    "media_attachments": [
+      {
+        "id": "41112814",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/a1431798c-70628a/9kaqocOSk6Ey/meNXEVZsXom4knESbSUsah9q7HGTq6eMDwc5Fokt.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/a1431798c-70628a/9kaqocOSk6Ey/meNXEVZsXom4knESbSUsah9q7HGTq6eMDwc5Fokt_thumb.jpg",
+        "description": "Una mujer joven con gorro rojo de lana y gafas de sol mira hacia el lado, en perfil de tres cuartos; lleva una gabardina azul oscuro abierta sobre una camiseta morada. Detrás, un canal estrecho ordena la perspectiva entre casas de tejado a dos aguas y árboles podados en bola. El gorro concentra todo el calor del cuadro.",
+        "blurhash": "UWF5~zrWIAj]_4M{WBV@pdIoW-oyx]s:oLae",
+        "meta": {
+          "width": 1620,
+          "height": 1080,
+          "size": "1620x1080",
+          "aspect": 1.5
+        }
+      }
+    ]
+  },
+  {
+    "id": "944276839965288194",
+    "url": "https://pixelfed.social/p/HispaniaObscura/944276839965288194",
+    "created_at": "2026-03-30T16:59:02.000Z",
+    "content_text": "",
+    "place": {
+      "id": 31427,
+      "slug": "madrid",
+      "name": "Madrid",
+      "country": "Spain"
+    },
+    "media_attachments": [
+      {
+        "id": "41112449",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/a1431798c-70628a/OF2FwB6eBo5B/2UoF1sKlXGwwIqbZWSDu6DibrrNqIenBKvjblRQH.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/a1431798c-70628a/OF2FwB6eBo5B/2UoF1sKlXGwwIqbZWSDu6DibrrNqIenBKvjblRQH_thumb.jpg",
+        "description": "Bolsa de tejido tradicional con patrón en zigzag de colores saturados: rojo, naranja, amarillo, azul cobalto y turquesa se alternan en líneas dentadas que cubren toda la superficie. De la boca cuelga una borla larga de flecos del mismo cromatismo. A la izquierda, la tapa de un objetivo de cámara recuerda quién mira.",
+        "blurhash": "UFH,|y0M5SkV~Aa#rrsm4:kVbvsqE2I:ozt6",
+        "meta": {
+          "width": 1538,
+          "height": 1080,
+          "size": "1538x1080",
+          "aspect": 1.424074074074074
+        }
+      }
+    ]
+  },
+  {
+    "id": "944276765354559174",
+    "url": "https://pixelfed.social/p/HispaniaObscura/944276765354559174",
+    "created_at": "2026-03-30T16:58:44.000Z",
+    "content_text": "",
+    "place": {
+      "id": 7135,
+      "slug": "brugge",
+      "name": "Brugge",
+      "country": "Belgium"
+    },
+    "media_attachments": [
+      {
+        "id": "41112437",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/a1431798c-70628a/qtpFW4cGA9ml/2gX9tNJYU5r3sOD0jR1YmhmHfRwQzGrVCfCZG1lv.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/a1431798c-70628a/qtpFW4cGA9ml/2gX9tNJYU5r3sOD0jR1YmhmHfRwQzGrVCfCZG1lv_thumb.jpg",
+        "description": "Fachada de ladrillo rojo gastado con dos ventanas altas, una hornacina con una pequeña Virgen y una rampa de madera inclinada que sale del muro como un cajón abierto. La piedra del zócalo se ha vuelto blanca por la humedad de los años. La rampa servía para subir mercancía a otra época.",
+        "blurhash": "U8G8J:4:9abuaJ%gbckW01oekXnO}=aeNGs:",
+        "meta": {
+          "width": 918,
+          "height": 1350,
+          "size": "918x1350",
+          "aspect": 0.68
+        }
+      }
+    ]
+  },
+  {
+    "id": "944275860141868108",
+    "url": "https://pixelfed.social/p/HispaniaObscura/944275860141868108",
+    "created_at": "2026-03-30T16:55:08.000Z",
+    "content_text": "",
+    "place": {
+      "id": 7135,
+      "slug": "brugge",
+      "name": "Brugge",
+      "country": "Belgium"
+    },
+    "media_attachments": [
+      {
+        "id": "41112330",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/a1431798c-70628a/OIWtZ2rRJNSF/mX6s3P4pcueZW0jZdMahAUnjCcjTsDLSVJV0mTKz.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/a1431798c-70628a/OIWtZ2rRJNSF/mX6s3P4pcueZW0jZdMahAUnjCcjTsDLSVJV0mTKz_thumb.jpg",
+        "description": "Un raspador de barro en forma de gato pequeño, fundido en hierro oscuro y oxidado, se apoya contra el quicio de piedra negra junto a un poste también de hierro. Detrás se asoma el panel rojo brillante de una puerta. El gato lleva décadas haciéndose el sorprendido sin que nadie le pase la mano por encima.",
+        "blurhash": "UBF}m400EN}[qGLfjX#8zVTxxuR5HrTKs:s.",
+        "meta": {
+          "width": 1080,
+          "height": 1178,
+          "size": "1080x1178",
+          "aspect": 0.9168081494057725
+        }
+      }
+    ]
+  },
+  {
+    "id": "944275755010802685",
+    "url": "https://pixelfed.social/p/HispaniaObscura/944275755010802685",
+    "created_at": "2026-03-30T16:54:43.000Z",
+    "content_text": "",
+    "place": {
+      "id": 7135,
+      "slug": "brugge",
+      "name": "Brugge",
+      "country": "Belgium"
+    },
+    "media_attachments": [
+      {
+        "id": "41112317",
+        "type": "image",
+        "url": "https://pxscdn.com/public/m/_v2/783480968440772334/a1431798c-70628a/7TD6TOUexZBS/ilexuJceLfQKzKTsJ1VRq9yt91ORADxRJE2W3GeZ.jpg",
+        "preview_url": "https://pxscdn.com/public/m/_v2/783480968440772334/a1431798c-70628a/7TD6TOUexZBS/ilexuJceLfQKzKTsJ1VRq9yt91ORADxRJE2W3GeZ_thumb.jpg",
+        "description": "Bomba de agua manual antigua, pintada en verde mar y oxidada en las juntas, sujeta a una pared encalada con tornillos pasantes. La palanca curva descansa hacia abajo y un caño grueso espera el siguiente cubo. La pieza sigue ahí décadas después de que el grifo de la cocina haga el trabajo.",
+        "blurhash": "UJKnrH9X^+^-xbxvR%InnTxuE0f*WBt7RjR%",
+        "meta": {
+          "width": 1012,
+          "height": 1350,
+          "size": "1012x1350",
+          "aspect": 0.7496296296296296
+        }
+      }
+    ]
+  }
+]
