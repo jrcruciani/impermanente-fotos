@@ -8,6 +8,7 @@ Salida en `output/`:
   - foto/{status_id}/index.html Página por foto
   - sitemap.xml
   - robots.txt
+  - llms.txt                Índice curado para LLMs (convención por host)
   - feed.json               (compatibilidad con consumidor JS de impermanente.es/fotos)
   - CNAME                   Para GitHub Pages custom domain
 
@@ -50,6 +51,17 @@ COLLECTION_ORDER = [
     "dorado",
     "psicopompo",
 ]
+
+# Descripciones curadas por colección (las del campo `description` en
+# collections.jsonl suelen venir vacías). Coherentes con el llms.txt del blog.
+COLLECTION_BLURBS = {
+    "umbrales": "marca personal del autor. Arcos, túneles, pasajes y orillas como espacios de tránsito y contacto entre dos mundos.",
+    "ciudades": "retrato fotográfico de ciudades — arquitectura, ritmo y atmósfera.",
+    "oubal": "serie íntima dedicada a Valeria. Retrato cotidiano y libre.",
+    "por-la-calle": "fotografía de calle. Gestos, escenas y personas en lo cotidiano urbano.",
+    "dorado": "puestas de sol y golden hour. La luz que cierra el día.",
+    "psicopompo": "tanatoturismo y patrimonio funerario. Cementerios históricos de Europa y otras geografías, escultura sepulcral y simbología de la muerte.",
+}
 
 
 # ---------- Utility ----------
@@ -962,6 +974,74 @@ def render_sitemap(items: list[dict], total_pages: int, collections: list[dict] 
     return body
 
 
+def render_llms_txt(items: list[dict], collections: list[dict] | None = None) -> str:
+    """llms.txt nativo del subdominio (la convención es por host).
+
+    El llms.txt del blog (impermanente.es) NO cubre este origen, así que
+    fotos.impermanente.es necesita el suyo para ser visible en esa ruta.
+    """
+    n = len(items)
+    by_slug = {c.get("slug"): c for c in (collections or [])}
+    lines = [
+        "# fotos.impermanente.es",
+        "",
+        f"> Galería estática de la obra fotográfica de {AUTHOR_NAME} (@HispaniaObscura en "
+        "Pixelfed): umbrales, calle, ciudades, retrato, cementerios y golden hour. Cada "
+        "fotografía lleva un alt-text evocativo en la voz del autor, pensado para ser legible "
+        "por personas y por modelos de lenguaje. Español, licencia Creative Commons Attribution 4.0.",
+        "",
+        f"Sitio hermano del cuaderno {PARENT_URL} (que tiene su propio llms.txt). Aquí vive "
+        "exclusivamente el archivo fotográfico, renderizado como HTML estático (sin JavaScript "
+        "para mostrar las fotos) con JSON-LD `ImageObject` por foto. El repositorio canónico de "
+        f"origen es Pixelfed: {PIXELFED_USER_URL}.",
+        "",
+        f"- **Autor**: {AUTHOR_NAME} — fotógrafo y escritor radicado en España. Royal Photographic Society (RPS).",
+        "- **Idioma**: español.",
+        "- **Marca personal**: *umbrales* — arcos, túneles, pasajes y orillas como espacios de tránsito.",
+        f"- **Fotografías publicadas**: {n}, todas con alt-text.",
+        f"- **Licencia**: Creative Commons Attribution 4.0 ({LICENSE_URL}).",
+        "",
+        "## Colecciones",
+        "",
+    ]
+    order = COLLECTION_ORDER + [s for s in by_slug if s not in COLLECTION_ORDER]
+    for slug in order:
+        c = by_slug.get(slug)
+        if not c or not c.get("status_ids"):
+            continue
+        count = len(c["status_ids"])
+        blurb = COLLECTION_BLURBS.get(slug) or (c.get("description") or "").strip()
+        url = f"{SITE_URL}/coleccion/{slug}/"
+        suffix = f": {blurb}" if blurb else ""
+        lines.append(f"- [{c.get('title') or slug}]({url}) ({count} fotos){suffix}")
+    lines += [
+        "",
+        "## Recursos para máquinas",
+        "",
+        f"- [Índice completo del sitio (sitemap)]({SITE_URL}/sitemap.xml) — todas las páginas de foto y colección.",
+        f"- [Feed JSON]({SITE_URL}/feed.json) — últimas fotos con su alt-text en `media_attachments[].description`.",
+        f"- [Página principal de la galería]({SITE_URL}/) — todas las fotos paginadas.",
+        f"- [Repositorio fotográfico de origen en Pixelfed]({PIXELFED_USER_URL}).",
+        "",
+        "## Sobre el alt-text",
+        "",
+        "El texto alternativo de cada foto no es una descripción neutra: es una lectura breve "
+        "y evocativa en la voz del autor (mono no aware, la atención a lo que está a punto de "
+        "desaparecer). Se sirve por triplicado —atributo `alt` de la imagen, prosa visible bajo "
+        "la foto y campo `description` del JSON-LD `ImageObject`— para que cualquier agente lo "
+        "encuentre sin ejecutar JavaScript.",
+        "",
+        f"## Más sobre {AUTHOR_NAME}",
+        "",
+        f"- [Cuaderno principal]({PARENT_URL}/) — escritura, viajes, lecturas e impermanencia (tiene su propio llms.txt).",
+        "- [Mastodon](https://masto.impermanente.es/@jrcruciani)",
+        "- [micro.blog](https://micro.blog/JRCruciani)",
+        "- [GitHub](https://github.com/Jrcruciani)",
+        "",
+    ]
+    return "\n".join(lines)
+
+
 def render_robots() -> str:
     return f"""User-agent: *
 Allow: /
@@ -1109,6 +1189,7 @@ def build(output_dir: Path, items: list[dict], collections: list[dict] | None = 
     # sitemap, robots, feed
     write(output_dir / "sitemap.xml", render_sitemap(items, total_pages, collections))
     write(output_dir / "robots.txt", render_robots())
+    write(output_dir / "llms.txt", render_llms_txt(items, collections))
     write(output_dir / "feed.json", render_feed_json(items))
 
     # CNAME para GitHub Pages custom domain
@@ -1141,7 +1222,7 @@ def main() -> None:
     print(f"  - {(len(items) + PHOTOS_PER_PAGE - 1) // PHOTOS_PER_PAGE} páginas paginadas")
     print(f"  - {len(items)} páginas individuales")
     print(f"  - {len(collections)} colecciones")
-    print(f"  - sitemap.xml, robots.txt, feed.json, 404.html, CNAME")
+    print(f"  - sitemap.xml, robots.txt, llms.txt, feed.json, 404.html, CNAME")
 
 
 if __name__ == "__main__":
