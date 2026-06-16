@@ -28,12 +28,12 @@ jobs:
       changed: ${{ steps.detect.outputs.changed }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
@@ -41,7 +41,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Restore/save images cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: data/images_cache
           key: images-${{ hashFiles('data/inventory.jsonl') }}
@@ -88,12 +88,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout (latest, includes data refresh)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: main
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
@@ -101,7 +101,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Restore images cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: data/images_cache
           key: images-${{ hashFiles('data/inventory.jsonl') }}
