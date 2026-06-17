@@ -45,8 +45,8 @@ fotos.impermanente.es  (GitHub Pages, cron 6h)
 
 ## 2. Setup y credenciales
 
-**Path repo:** `~/Proyectos/impermanente-alttext`
-**venv:** `~/Proyectos/impermanente-alttext/.venv` con `requests`, `Pillow`
+**Path repo:** `~/Proyectos/impermanente-fotos`
+**venv:** `~/Proyectos/impermanente-fotos/.venv` con `requests`, `Pillow`
 **Credenciales Pixelfed:** `~/.config/hispania-obscura/.env`
 
 Variables esperadas:
@@ -61,7 +61,7 @@ PIXELFED_CLIENT_SECRET="..."  # opcional
 
 **Activar venv siempre:**
 ```bash
-cd ~/Proyectos/impermanente-alttext && source .venv/bin/activate
+cd ~/Proyectos/impermanente-fotos && source .venv/bin/activate
 set -a && source ~/.config/hispania-obscura/.env && set +a
 ```
 
@@ -74,7 +74,7 @@ set -a && source ~/.config/hispania-obscura/.env && set +a
 
 ### 3.1. Sync local con remoto
 ```bash
-cd ~/Proyectos/impermanente-alttext && source .venv/bin/activate
+cd ~/Proyectos/impermanente-fotos && source .venv/bin/activate
 git pull --rebase origin main
 ```
 

@@ -29,7 +29,7 @@ Borra el post de prueba creado en Test C/D.
 Output: SMOKE_TEST_RESULTS.md con matriz completa de endpoint × superficie.
 
 Uso:
-    source ~/Proyectos/impermanente-alttext/.venv/bin/activate
+    source ~/Proyectos/impermanente-fotos/.venv/bin/activate
     python scripts/smoke_test.py
 """
 from __future__ import annotations
