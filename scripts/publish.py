@@ -41,8 +41,22 @@ HTTP_TIMEOUT = 30
 MAX_RETRIES = 6
 RETRY_429_BASE = 30  # segundos base para 429 (Pixelfed pide "a few minutes")
 
+REQUIRED_ENV_VARS = ("PIXELFED_INSTANCE", "PIXELFED_ACCESS_TOKEN")
+
+# Se rellenan en init_env() (invocado desde main()), no al importar el módulo,
+# para que --help y los tests funcionen sin un .env preparado.
+INSTANCE = ""
+TOKEN = ""
+BASE = ""
+AUTH_HEADERS: dict[str, str] = {}
+
 
 def load_env(path: Path) -> dict[str, str]:
+    if not path.exists():
+        sys.exit(
+            f"error: no se encontró el archivo de configuración {path}\n"
+            f"Créalo con las variables: {', '.join(REQUIRED_ENV_VARS)}"
+        )
     env: dict[str, str] = {}
     for line in path.read_text().splitlines():
         line = line.strip()
@@ -53,11 +67,21 @@ def load_env(path: Path) -> dict[str, str]:
     return env
 
 
-ENV = load_env(ENV_PATH)
-INSTANCE = ENV["PIXELFED_INSTANCE"]
-TOKEN = ENV["PIXELFED_ACCESS_TOKEN"]
-BASE = f"https://{INSTANCE}"
-AUTH_HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
+def init_env() -> None:
+    """Carga y valida el .env, poblando los globals de configuración.
+
+    Aborta con un mensaje claro si el archivo o alguna variable obligatoria
+    falta. Se llama explícitamente desde main(), nunca al importar.
+    """
+    global INSTANCE, TOKEN, BASE, AUTH_HEADERS
+    env = load_env(ENV_PATH)
+    missing = [k for k in REQUIRED_ENV_VARS if not env.get(k)]
+    if missing:
+        sys.exit(f"error: faltan variables obligatorias en {ENV_PATH}: {', '.join(missing)}")
+    INSTANCE = env["PIXELFED_INSTANCE"]
+    TOKEN = env["PIXELFED_ACCESS_TOKEN"]
+    BASE = f"https://{INSTANCE}"
+    AUTH_HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
 
 
 def load_generated() -> list[dict]:
@@ -231,6 +255,8 @@ def main() -> None:
     ap.add_argument("--seed", type=int, default=42, help="Semilla para --sample")
     ap.add_argument("--force", action="store_true", help="Reescribe aun si ya está publicado")
     args = ap.parse_args()
+
+    init_env()
 
     generated = load_generated()
     published = load_published()

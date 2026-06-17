@@ -42,7 +42,7 @@ def load_existing() -> dict[str, dict]:
 def write_all(records: dict[str, dict]) -> None:
     tmp = OUT_PATH.with_suffix(".jsonl.tmp")
     with tmp.open("w") as f:
-        for rec in sorted(records.values(), key=lambda r: r.get("created_at", "")):
+        for rec in sorted(records.values(), key=lambda r: r.get("created_at") or ""):
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
     os.replace(tmp, OUT_PATH)
 

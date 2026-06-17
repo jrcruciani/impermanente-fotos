@@ -131,7 +131,7 @@ EOF
 ```
 
 ⚠ **No existe `--records-file`**, solo `--records JSON` o stdin.
-⚠ Si `created_at` es `None`, `append_generated.py` falla con TypeError al ordenar — siempre pasa `created_at` aunque sea de `inventory.jsonl`.
+⚠ Si `created_at` es `None` o falta, `append_generated.py` lo normaliza a `""` al ordenar (ya no lanza TypeError); aun así, pasa `created_at` cuando lo tengas para mantener el orden cronológico.
 
 ### 3.6. Publicar a Pixelfed
 ```bash

@@ -34,6 +34,7 @@ Uso:
 """
 from __future__ import annotations
 
+import argparse
 import io
 import json
 import os
@@ -58,7 +59,29 @@ WORKER_CACHE_BUST_BASE = int(time.time())
 
 
 # --- env loader ---
+REQUIRED_ENV_VARS = (
+    "PIXELFED_INSTANCE",
+    "PIXELFED_ACCESS_TOKEN",
+    "PIXELFED_USERNAME",
+    "PIXELFED_ACCOUNT_ID",
+)
+
+# Se rellenan en init_env() (invocado desde main()), no al importar el módulo,
+# para que --help y los tests funcionen sin un .env preparado.
+INSTANCE = ""
+TOKEN = ""
+USERNAME = ""
+ACCOUNT_ID = ""
+BASE = ""
+AUTH_HEADERS: dict[str, str] = {}
+
+
 def load_env(path: Path) -> dict[str, str]:
+    if not path.exists():
+        sys.exit(
+            f"error: no se encontró el archivo de configuración {path}\n"
+            f"Créalo con las variables: {', '.join(REQUIRED_ENV_VARS)}"
+        )
     env: dict[str, str] = {}
     for line in path.read_text().splitlines():
         line = line.strip()
@@ -69,14 +92,23 @@ def load_env(path: Path) -> dict[str, str]:
     return env
 
 
-ENV = load_env(ENV_PATH)
-INSTANCE = ENV["PIXELFED_INSTANCE"]
-TOKEN = ENV["PIXELFED_ACCESS_TOKEN"]
-USERNAME = ENV["PIXELFED_USERNAME"]
-ACCOUNT_ID = ENV["PIXELFED_ACCOUNT_ID"]
-BASE = f"https://{INSTANCE}"
+def init_env() -> None:
+    """Carga y valida el .env, poblando los globals de configuración.
 
-AUTH_HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
+    Aborta con un mensaje claro si el archivo o alguna variable obligatoria
+    falta. Se llama explícitamente desde main(), nunca al importar.
+    """
+    global INSTANCE, TOKEN, USERNAME, ACCOUNT_ID, BASE, AUTH_HEADERS
+    env = load_env(ENV_PATH)
+    missing = [k for k in REQUIRED_ENV_VARS if not env.get(k)]
+    if missing:
+        sys.exit(f"error: faltan variables obligatorias en {ENV_PATH}: {', '.join(missing)}")
+    INSTANCE = env["PIXELFED_INSTANCE"]
+    TOKEN = env["PIXELFED_ACCESS_TOKEN"]
+    USERNAME = env["PIXELFED_USERNAME"]
+    ACCOUNT_ID = env["PIXELFED_ACCOUNT_ID"]
+    BASE = f"https://{INSTANCE}"
+    AUTH_HEADERS = {"Authorization": f"Bearer {TOKEN}", "Accept": "application/json"}
 
 
 # --- HTTP helpers ---
@@ -509,6 +541,14 @@ def decide(results: dict) -> dict:
 
 # --- Main ---
 def main() -> None:
+    argparse.ArgumentParser(
+        description="Smoke test: verifica si se pueden escribir descriptions "
+        "retroactivamente en posts de Pixelfed (lee credenciales de "
+        f"{ENV_PATH}).",
+    ).parse_args()
+
+    init_env()
+
     print(f"Smoke test — marker {SMOKE_MARK}")
     print(f"Instance: {INSTANCE}, account: @{USERNAME} (id={ACCOUNT_ID})")
 
