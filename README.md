@@ -9,7 +9,7 @@ Pipeline para generar y publicar **alt-text evocativo** en las fotos de [@Hispan
 1. **Lee Pixelfed** y construye un inventario de cada foto (`scripts/fetch_inventory.py`).
 2. **Genera alt-text** descriptivo + evocativo para cada foto sin descripción, aplicando un style guide y QA automático.
 3. **Publica** los alt-texts en Pixelfed via `PUT /api/v1/media/:id` con read-after-write (`scripts/publish.py`).
-4. **Construye un sitio estático** con todas las fotos paginadas, JSON-LD por foto, sitemap y robots (`scripts/build_site.py`). Hereda directamente el theme visual del blog (`https://impermanente.es/custom.css`) para verse igual que `impermanente.es`.
+4. **Construye un sitio estático** con todas las fotos paginadas, JSON-LD por foto, sitemap, robots y bundle OKF (`scripts/build_site.py`). Hereda directamente el theme visual del blog (`https://impermanente.es/custom.css`) para verse igual que `impermanente.es`.
 5. **Despliega** a GitHub Pages → `fotos.impermanente.es`. El menú "Fotos" del blog en micro.blog hace meta-refresh hacia este sitio.
 
 ## Estructura
@@ -29,7 +29,7 @@ impermanente-fotos/
 │   ├── append_generated.py    # Añade alt-texts con QA
 │   ├── qa.py                  # Reglas de QA (longitud, blacklist, etc.)
 │   ├── publish.py             # Publica en Pixelfed con read-after-write
-│   ├── build_site.py          # Genera sitio estático en output/
+│   ├── build_site.py          # Genera sitio estático y output/okf/
 │   ├── oauth_setup.py         # Setup inicial OAuth Pixelfed
 │   └── smoke_test.py          # Test exhaustivo del endpoint de escritura
 ├── output/                    # Sitio estático (gitignored, deployed por Action)
@@ -59,6 +59,9 @@ python3 scripts/publish.py --dry-run --sample 5
 # Construir sitio
 python3 scripts/build_site.py
 
+# Validar bundle OKF
+python3 -m pytest tests/test_okf.py -q
+
 # Servir local
 cd output && python3 -m http.server 8080
 ```
@@ -70,6 +73,10 @@ cd output && python3 -m http.server 8080
 - Genera + publica alt-texts pendientes (si la generación CI está habilitada).
 - Construye `output/`.
 - Deploy a `gh-pages` → GitHub Pages → `fotos.impermanente.es`.
+
+### Bundle OKF
+
+El build publica `output/okf/` en [`/okf/`](https://fotos.impermanente.es/okf/): archivos markdown con frontmatter YAML, un concepto por foto y por colección, legibles y clonables por agentes.
 
 ### Secrets requeridos
 

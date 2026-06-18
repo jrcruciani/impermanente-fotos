@@ -9,6 +9,7 @@ Salida en `output/`:
   - sitemap.xml
   - robots.txt
   - llms.txt                Índice curado para LLMs (convención por host)
+  - okf/                    Bundle Open Knowledge Format (markdown + frontmatter)
   - feed.json               (compatibilidad con consumidor JS de impermanente.es/fotos)
   - CNAME                   Para GitHub Pages custom domain
 
@@ -958,6 +959,7 @@ def render_sitemap(items: list[dict], total_pages: int, collections: list[dict] 
     today = datetime.now(timezone.utc).date().isoformat()
     urls = [
         (SITE_URL + "/", today, "weekly", "1.0"),
+        (SITE_URL + "/okf/", today, "weekly", "0.7"),
     ]
     for n in range(2, total_pages + 1):
         urls.append((f"{SITE_URL}/p/{n}/", today, "weekly", "0.7"))
@@ -1020,6 +1022,7 @@ def render_llms_txt(items: list[dict], collections: list[dict] | None = None) ->
         "",
         f"- [Índice completo del sitio (sitemap)]({SITE_URL}/sitemap.xml) — todas las páginas de foto y colección.",
         f"- [Feed JSON]({SITE_URL}/feed.json) — últimas fotos con su alt-text en `media_attachments[].description`.",
+        f"- [Bundle Open Knowledge Format (OKF)]({SITE_URL}/okf/) — el archivo fotográfico como conjunto de archivos markdown con frontmatter, legible y clonable por agentes.",
         f"- [Página principal de la galería]({SITE_URL}/) — todas las fotos paginadas.",
         f"- [Repositorio fotográfico de origen en Pixelfed]({PIXELFED_USER_URL}).",
         "",
@@ -1125,6 +1128,134 @@ def render_feed_json(items: list[dict], limit: int = 30) -> str:
     return json.dumps(posts, ensure_ascii=False, indent=2)
 
 
+def okf_scalar(value: str | None) -> str:
+    return json.dumps(" ".join((value or "").split()), ensure_ascii=False)
+
+
+def okf_frontmatter(fields: dict[str, object]) -> str:
+    lines = ["---"]
+    for key, value in fields.items():
+        if isinstance(value, list):
+            if value:
+                lines.append(f"{key}:")
+                for item in value:
+                    lines.append(f"  - {okf_scalar(str(item))}")
+            else:
+                lines.append(f"{key}: []")
+        else:
+            lines.append(f"{key}: {okf_scalar(str(value))}")
+    lines.append("---")
+    return "\n".join(lines) + "\n\n"
+
+
+def okf_description(text: str | None, limit: int = 140) -> str:
+    text = " ".join((text or "").split())
+    if len(text) <= limit:
+        return text
+    return text[:limit].rsplit(" ", 1)[0].rstrip(",;:.") + "…"
+
+
+def okf_photo_title(photo: dict) -> str:
+    place = fmt_place(photo.get("place"))
+    date = fmt_date_es(photo.get("created_at"))
+    if place and date:
+        return f"{place} · {date}"
+    if place:
+        return place
+    if date:
+        return f"Fotografía · {date}"
+    return okf_description(photo.get("alt_text"), 80) or f"Fotografía {photo['status_id']}"
+
+
+def build_okf(output_dir: Path, items: list[dict], collections: list[dict] | None = None) -> int:
+    okf_dir = output_dir / "okf"
+    collections = collections or []
+    by_status = {p["status_id"]: p for p in items}
+    collections_by_status: dict[str, list[tuple[str, str]]] = {}
+    for c in collections:
+        for sid in c.get("status_ids", []):
+            collections_by_status.setdefault(sid, []).append((c["slug"], c.get("title") or c["slug"]))
+
+    write(okf_dir / ".nojekyll", "")
+    write(okf_dir / "index.md", okf_frontmatter({
+        "okf_version": "0.1",
+        "title": "impermanente fotos — OKF",
+        "description": "Archivo fotográfico de HispaniaObscura en Open Knowledge Format.",
+    }) + """# impermanente fotos — OKF
+
+## Colecciones
+
+* [Colecciones](/colecciones/) - recorridos curados por tema, luz y motivo.
+
+## Fotografías
+
+* [Fotografías](/fotografias/) - un concepto markdown por foto publicada.
+""")
+    write(okf_dir / "log.md", f"""# Log
+
+## {datetime.now().astimezone().date().isoformat()}
+
+* **Creación** del bundle OKF v0.1 con {len(items)} fotografías y {len(collections)} colecciones.
+""")
+
+    photo_index = ["# Fotografías", ""]
+    for p in items:
+        title = okf_photo_title(p)
+        photo_index.append(f"* [{title}]({p['status_id']}.md) - {okf_description(p.get('alt_text'))}")
+        place = p.get("place") or {}
+        tags = []
+        for value in (place.get("name"), place.get("country")):
+            if value and value not in tags:
+                tags.append(value)
+        for _, title_tag in collections_by_status.get(p["status_id"], []):
+            if title_tag not in tags:
+                tags.append(title_tag)
+        collection_links = [f"[{title_tag}](/colecciones/{slug}.md)" for slug, title_tag in collections_by_status.get(p["status_id"], [])]
+        body = okf_frontmatter({
+            "type": "Fotografía",
+            "title": title,
+            "description": p.get("alt_text") or "",
+            "resource": p.get("status_url") or "",
+            "tags": tags,
+            "timestamp": p.get("created_at") or "",
+        })
+        body += f"# {title}\n\n{p.get('alt_text') or ''}\n\n"
+        place_str = fmt_place(p.get("place"))
+        if place_str:
+            body += f"**Lugar:** {place_str}\n\n"
+        body += f"**Página:** [{photo_url(p['status_id'])}]({photo_url(p['status_id'])})\n\n"
+        if collection_links:
+            body += "**Colecciones:** " + ", ".join(collection_links) + "\n\n"
+        body += f"![{p.get('alt_text') or title}]({p.get('image_url') or p.get('preview_url') or ''})\n"
+        write(okf_dir / "fotografias" / f"{p['status_id']}.md", body)
+    write(okf_dir / "fotografias" / "index.md", "\n".join(photo_index) + "\n")
+
+    collection_index = ["# Colecciones", ""]
+    concept_collections = 0
+    for c in collections:
+        coll_items = [by_status[sid] for sid in c.get("status_ids", []) if sid in by_status]
+        description = COLLECTION_BLURBS.get(c["slug"]) or (c.get("description") or "").strip()
+        title = c.get("title") or c["slug"]
+        collection_index.append(f"* [{title}]({c['slug']}.md) - {okf_description(description)}")
+        timestamp = c.get("updated_at") or c.get("published_at") or ""
+        tags = [title]
+        body = okf_frontmatter({
+            "type": "Colección",
+            "title": title,
+            "description": description,
+            "resource": f"{SITE_URL}/coleccion/{c['slug']}/",
+            "tags": tags,
+            "timestamp": timestamp,
+        })
+        body += f"# {title}\n\n{description}\n\n## Fotografías\n\n"
+        for p in coll_items:
+            body += f"* [{okf_photo_title(p)}](/fotografias/{p['status_id']}.md) - {okf_description(p.get('alt_text'))}\n"
+        write(okf_dir / "colecciones" / f"{c['slug']}.md", body)
+        concept_collections += 1
+    write(okf_dir / "colecciones" / "index.md", "\n".join(collection_index) + "\n")
+    return len(items) + concept_collections
+
+
 # ---------- Main ----------
 
 def write(path: Path, content: str) -> None:
@@ -1146,7 +1277,7 @@ def build(output_dir: Path, items: list[dict], collections: list[dict] | None = 
         print(f"  [img] Copiados {sum(1 for _ in img_dest.iterdir())} thumbs a output/img/")
     else:
         img_dest.mkdir(parents=True, exist_ok=True)
-        print(f"  [img] AVISO: {IMAGES_CACHE_DIR} no existe; la galería caerá a previews remotos")
+        print("  [img] AVISO: data/images_cache no existe; la galería caerá a previews remotos")
 
     total_pages = max(1, (len(items) + PHOTOS_PER_PAGE - 1) // PHOTOS_PER_PAGE)
 
@@ -1187,6 +1318,8 @@ def build(output_dir: Path, items: list[dict], collections: list[dict] | None = 
         print(f"  [coleccion] {coll_built}/{len(collections)} páginas de colección")
 
     # sitemap, robots, feed
+    okf_concepts = build_okf(output_dir, items, collections)
+    print(f"  [okf] {okf_concepts} conceptos en output/okf/")
     write(output_dir / "sitemap.xml", render_sitemap(items, total_pages, collections))
     write(output_dir / "robots.txt", render_robots())
     write(output_dir / "llms.txt", render_llms_txt(items, collections))
@@ -1217,12 +1350,16 @@ def main() -> None:
     collections = sort_collections(load_jsonl(COLLECTIONS_PATH))
 
     build(args.out, items, collections)
-    print(f"Sitio generado en {args.out}/")
+    try:
+        out_label = args.out.relative_to(ROOT)
+    except ValueError:
+        out_label = Path(args.out.name)
+    print(f"Sitio generado en {out_label}/")
     print(f"  - {len(items)} fotos")
     print(f"  - {(len(items) + PHOTOS_PER_PAGE - 1) // PHOTOS_PER_PAGE} páginas paginadas")
     print(f"  - {len(items)} páginas individuales")
     print(f"  - {len(collections)} colecciones")
-    print(f"  - sitemap.xml, robots.txt, llms.txt, feed.json, 404.html, CNAME")
+    print(f"  - sitemap.xml, robots.txt, llms.txt, okf/, feed.json, 404.html, CNAME")
 
 
 if __name__ == "__main__":

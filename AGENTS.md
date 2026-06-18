@@ -37,6 +37,7 @@ fotos.impermanente.es  (GitHub Pages, cron 6h)
 | "actualiza el inventario" | Solo `fetch_inventory.py` y reporto pendientes |
 | "republica esta foto" `<id>` | `publish.py --media-ids X --force` |
 | "regenera el sitio" | `build_site.py` + `git push` (Action despliega) |
+| "regenera OKF", "actualiza el bundle OKF" | `build_site.py` (genera `output/okf/` junto al sitio) |
 | "qué falta por hacer" | `next_batch.py` + reporte |
 | "valida cobertura" | Probes a los 7 surfaces (ver §6) |
 | "cambia el style guide" | Edit `style-guide/STYLE_GUIDE.md` + `prompt/MASTER_PROMPT.md`, NO regenero retroactivamente salvo que JR lo pida explícito |
@@ -255,6 +256,23 @@ curl -s https://pixelfed.social/p/$PIXELFED_USERNAME/<status_id> \
 **HTML del header** (definido en `head()` de `build_site.py`) usa las clases idénticas al blog: `.header`, `.site-nav`, `.site-title`, `.u-photo`, `#avatar`, `.nav-menu`, `.nav-item`. Eso permite que el theme aplique sus estilos sin tener que duplicarlos.
 
 **Si quieres romper el vínculo** (por ejemplo para hacer un re-skin local independiente): copia los 4 archivos a `output/css/` durante el build y cambia las URLs a relativas. Hoy NO está hecho.
+
+---
+
+## 6.ter. Bundle OKF (`/okf/`)
+
+`build_site.py` genera también `output/okf/`: un bundle Open Knowledge Format v0.1 servido en `https://fotos.impermanente.es/okf/`.
+
+- `okf/index.md` declara `okf_version: "0.1"` y enlaza a colecciones/fotografías.
+- `okf/fotografias/<status_id>.md` es un concepto por foto, con frontmatter `type: Fotografía`.
+- `okf/colecciones/<slug>.md` es un concepto por colección, con frontmatter `type: Colección`.
+- `okf/.nojekyll` permite servir markdown crudo en GitHub Pages.
+
+Regenerar:
+```bash
+python3 scripts/build_site.py
+python3 -m pytest tests/test_okf.py -q
+```
 
 ---
 
