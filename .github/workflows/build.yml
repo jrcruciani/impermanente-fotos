@@ -9,8 +9,8 @@ on:
       - '.github/workflows/build.yml'
   workflow_dispatch:
   schedule:
-    # Cada 6 horas: detecta fotos nuevas y rebuild + deploy.
-    - cron: '17 */6 * * *'
+    # Cada hora: detecta fotos nuevas y rebuild + deploy.
+    - cron: '17 * * * *'
 
 permissions:
   contents: write
