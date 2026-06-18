@@ -1167,6 +1167,44 @@ def okf_photo_title(photo: dict) -> str:
     return okf_description(photo.get("alt_text"), 80) or f"Fotografía {photo['status_id']}"
 
 
+def okf_landing_html(n_photos: int, n_collections: int) -> str:
+    # ponytail: puerta HTML para humanos; los agentes entran por index.md.
+    return """<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>impermanente fotos — bundle OKF</title>
+<style>
+:root{color-scheme:light dark}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;max-width:42rem;margin:3rem auto;padding:0 1.2rem;line-height:1.6;color:#3a3a3a;background:#faf8f5}
+@media(prefers-color-scheme:dark){body{color:#e6e1da;background:#1a1816}}
+a{color:#b07a5a;text-decoration:none}a:hover{text-decoration:underline}
+code{background:rgba(128,128,128,.15);padding:.1em .35em;border-radius:.3em}
+ul{padding-left:1.2rem}li{margin:.3rem 0}
+.muted{opacity:.7;font-size:.9rem}
+</style>
+</head>
+<body>
+<h1>impermanente fotos — bundle OKF</h1>
+<p>Esta carpeta es un <strong>bundle en Open Knowledge Format (OKF&nbsp;v0.1)</strong>:
+una representación legible por agentes del archivo fotográfico, con un concepto en
+markdown por cada fotografía y colección.</p>
+<p>Entradas del bundle (markdown):</p>
+<ul>
+<li><a href="index.md">index.md</a> — entrada del bundle</li>
+<li><a href="colecciones/index.md">colecciones/</a> — N_COLLECTIONS recorridos curados</li>
+<li><a href="fotografias/index.md">fotografias/</a> — N_PHOTOS conceptos, uno por foto</li>
+<li><a href="log.md">log.md</a> — historial</li>
+</ul>
+<p class="muted">¿Eres un agente? Empieza por <code>index.md</code>. Formato:
+<a href="https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md">OKF&nbsp;SPEC</a>.</p>
+<p><a href="SITE_URL_HERE">← Volver a la galería</a></p>
+</body>
+</html>
+""".replace("N_COLLECTIONS", str(n_collections)).replace("N_PHOTOS", str(n_photos)).replace("SITE_URL_HERE", SITE_URL)
+
+
 def build_okf(output_dir: Path, items: list[dict], collections: list[dict] | None = None) -> int:
     okf_dir = output_dir / "okf"
     collections = collections or []
@@ -1197,6 +1235,7 @@ def build_okf(output_dir: Path, items: list[dict], collections: list[dict] | Non
 
 * **Creación** del bundle OKF v0.1 con {len(items)} fotografías y {len(collections)} colecciones.
 """)
+    write(okf_dir / "index.html", okf_landing_html(len(items), len(collections)))
 
     photo_index = ["# Fotografías", ""]
     for p in items:
