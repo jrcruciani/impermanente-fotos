@@ -22,7 +22,7 @@ generated.jsonl
 Pixelfed actualizado
    │
    ▼  build_site.py  (genera output/ estático)
-fotos.impermanente.es  (GitHub Pages, cron 6h)
+fotos.impermanente.es  (GitHub Pages, cron 12h)
 ```
 
 **Cobertura actual:** 154/154 fotos con alt-text publicado, verificado en 7 surfaces (API, SSR, ActivityPub, feed.json, etc.).
@@ -279,7 +279,7 @@ python3 -m pytest tests/test_okf.py -q
 ## 7. CI/CD — qué hace el cron
 
 **Workflow:** `.github/workflows/build.yml`
-**Cron:** `17 */6 * * *` UTC (00:17, 06:17, 12:17, 18:17 — en CEST: 02:17, 08:17, 14:17, 20:17)
+**Cron:** `17 */12 * * *` UTC (00:17, 12:17 — en CEST: 02:17, 14:17)
 
 **Jobs:**
 1. `fetch-and-publish`: `fetch_inventory.py` → si hay diff en `data/`, commit con `github-actions[bot]` y push.
@@ -293,8 +293,8 @@ gh workflow run build.yml --repo Jrcruciani/impermanente-fotos
 
 **Latencia foto nueva → live:**
 - Best case: ~10 min (cron + build + CDN cache 600s)
-- Worst case: ~6h 10 min (justo después de un cron)
-- Avg: ~3h
+- Worst case: ~12h 10 min (justo después de un cron)
+- Avg: ~6h
 - Para alt-text evocativo: requiere sesión manual (§3).
 
 ---
