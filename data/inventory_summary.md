@@ -1,17 +1,16 @@
 # Inventory summary
 
-- Total statuses: 170
-- Total media_attachments (image): 170
-- Pendientes de alt-text: 6
+- Total statuses: 171
+- Total media_attachments (image): 171
+- Pendientes de alt-text: 0
 - En posts multi-attachment: 0
-- Imágenes descargadas correctamente: 170
+- Imágenes descargadas correctamente: 171
 - Imágenes que fallaron: 0
 
 ## Distribución temporal (pendientes)
 
-- 2026-06: 6
 
 ## Cobertura de `place`
 
-- Con `place.name`: 6
+- Con `place.name`: 0
 - Sin `place`: 0
