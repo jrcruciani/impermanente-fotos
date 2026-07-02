@@ -1,0 +1,39 @@
+# fotos.impermanente.es
+
+> Galería estática de la obra fotográfica de J.R. Cruciani (@HispaniaObscura en Pixelfed): umbrales, calle, ciudades, retrato, cementerios y golden hour. Cada fotografía lleva un alt-text evocativo en la voz del autor, pensado para ser legible por personas y por modelos de lenguaje. Español, licencia Creative Commons Attribution 4.0.
+
+Sitio hermano del cuaderno https://impermanente.es (que tiene su propio llms.txt). Aquí vive exclusivamente el archivo fotográfico, renderizado como HTML estático (sin JavaScript para mostrar las fotos) con JSON-LD `ImageObject` por foto. El repositorio canónico de origen es Pixelfed: https://pixelfed.social/HispaniaObscura.
+
+- **Autor**: J.R. Cruciani — fotógrafo y escritor radicado en España. Royal Photographic Society (RPS).
+- **Idioma**: español.
+- **Marca personal**: *umbrales* — arcos, túneles, pasajes y orillas como espacios de tránsito.
+- **Fotografías publicadas**: 174, todas con alt-text.
+- **Licencia**: Creative Commons Attribution 4.0 (https://creativecommons.org/licenses/by/4.0/).
+
+## Colecciones
+
+- [Umbrales](https://fotos.impermanente.es/coleccion/umbrales/) (23 fotos): marca personal del autor. Arcos, túneles, pasajes y orillas como espacios de tránsito y contacto entre dos mundos.
+- [Ciudades](https://fotos.impermanente.es/coleccion/ciudades/) (23 fotos): retrato fotográfico de ciudades — arquitectura, ritmo y atmósfera.
+- [Oubal](https://fotos.impermanente.es/coleccion/oubal/) (14 fotos): serie íntima dedicada a Valeria. Retrato cotidiano y libre.
+- [Por la calle](https://fotos.impermanente.es/coleccion/por-la-calle/) (22 fotos): fotografía de calle. Gestos, escenas y personas en lo cotidiano urbano.
+- [Dorado](https://fotos.impermanente.es/coleccion/dorado/) (11 fotos): puestas de sol y golden hour. La luz que cierra el día.
+- [Psicopompo](https://fotos.impermanente.es/coleccion/psicopompo/) (16 fotos): tanatoturismo y patrimonio funerario. Cementerios históricos de Europa y otras geografías, escultura sepulcral y simbología de la muerte.
+
+## Recursos para máquinas
+
+- [Índice completo del sitio (sitemap)](https://fotos.impermanente.es/sitemap.xml) — todas las páginas de foto y colección.
+- [Feed JSON](https://fotos.impermanente.es/feed.json) — últimas fotos con su alt-text en `media_attachments[].description`.
+- [Bundle Open Knowledge Format (OKF)](https://fotos.impermanente.es/okf/) — el archivo fotográfico como conjunto de archivos markdown con frontmatter, legible y clonable por agentes.
+- [Página principal de la galería](https://fotos.impermanente.es/) — todas las fotos paginadas.
+- [Repositorio fotográfico de origen en Pixelfed](https://pixelfed.social/HispaniaObscura).
+
+## Sobre el alt-text
+
+El texto alternativo de cada foto no es una descripción neutra: es una lectura breve y evocativa en la voz del autor (mono no aware, la atención a lo que está a punto de desaparecer). Se sirve por triplicado —atributo `alt` de la imagen, prosa visible bajo la foto y campo `description` del JSON-LD `ImageObject`— para que cualquier agente lo encuentre sin ejecutar JavaScript.
+
+## Más sobre J.R. Cruciani
+
+- [Cuaderno principal](https://impermanente.es/) — escritura, viajes, lecturas e impermanencia (tiene su propio llms.txt).
+- [Mastodon](https://masto.impermanente.es/@jrcruciani)
+- [micro.blog](https://micro.blog/JRCruciani)
+- [GitHub](https://github.com/Jrcruciani)
