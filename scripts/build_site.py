@@ -42,7 +42,7 @@ FAVICON_URL = "https://micro.blog/JRCruciani/favicon.png"
 AUTHOR_NAME = "J.R. Cruciani"
 AUTHOR_ID = "https://impermanente.es/about/#person"
 SERIES_ID = f"{SITE_URL}/#series"
-PHOTOS_PER_PAGE = 30
+PHOTOS_PER_PAGE = 60
 LICENSE_URL = "https://creativecommons.org/licenses/by/4.0/"
 COLLECTION_ORDER = [
     "umbrales",
@@ -380,8 +380,8 @@ main {
 }
 .pagination a, .pagination span {
   padding: 10px 16px;
-  border: 1px solid var(--separator);
-  color: var(--muted);
+  border: 1px solid var(--heading);
+  color: var(--heading);
   text-decoration: none;
   border-radius: 0;
   transition: color 0.2s ease, border-color 0.2s ease;
@@ -552,6 +552,57 @@ body.photo-page main {
   transition: border-color 0.2s ease;
 }
 .photo-hero-immersive .hero-cap .hero-cta:hover { border-color: #fff; }
+
+/* Captions estilo museo: reveladas al pasar el cursor sobre cada foto */
+.masonry-grid li a { position: relative; }
+.masonry-grid .photo-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 40px 16px 16px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.74));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.masonry-grid li a:hover .photo-overlay { opacity: 1; }
+.masonry-grid .photo-overlay .photo-caption {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: var(--weight-light, 300);
+  line-height: 1.4;
+  color: #fff;
+  margin: 0 0 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.masonry-grid .photo-overlay .photo-meta-line {
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  font-weight: var(--weight-normal, 400);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+  display: block;
+}
+.masonry-grid .photo-overlay .photo-meta-line .photo-place { color: rgba(255, 255, 255, 0.92); }
+
+/* Táctil (sin hover): mostramos el caption de forma permanente y sutil */
+@media (hover: none) {
+  .masonry-grid .photo-overlay {
+    opacity: 1;
+    background: linear-gradient(transparent 45%, rgba(0, 0, 0, 0.66));
+    padding-top: 56px;
+  }
+}
+
+/* === Apple "museo": captions al hover sobre cada foto ===
+   Layout portado del mock `appledin` (Apple + tipografía D-DIN de SpaceX).
+   Reutiliza las variables heredadas del blog: --sans (D-DIN), --serif (Lora),
+   --weight-*, y el acento teal. */
 
 /* Captions estilo museo: reveladas al pasar el cursor sobre cada foto */
 .masonry-grid li a { position: relative; }
