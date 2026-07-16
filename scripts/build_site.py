@@ -481,122 +481,6 @@ body.photo-page main {
   .masonry-grid .photo-caption { font-size: 1.2rem; }
   .photo-page .photo-text { font-size: 1.7rem; }
   .section-title { font-size: 1.7rem; }
-  .photo-hero-immersive { height: min(58vh, 460px); margin-top: -40px; }
-  .photo-hero-immersive .hero-cap h1 { font-size: 2.9rem; letter-spacing: 2px; }
-  .photo-hero-immersive .hero-cap .hero-sub { font-size: 1.4rem; }
-}
-
-/* === Apple "museo": hero inmersivo full-bleed + captions al hover ===
-   Layout portado del mock `appledin` (Apple + tipografía D-DIN de SpaceX).
-   Reutiliza las variables heredadas del blog: --sans (D-DIN), --serif (Lora),
-   --weight-*, y el acento teal. El hero rompe el ancho de `main` con la
-   técnica full-bleed calc(50% - 50vw). */
-.photo-hero-immersive {
-  position: relative;
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-top: -60px;
-  height: min(72vh, 620px);
-  overflow: hidden;
-  background: #000;
-}
-.photo-hero-immersive > img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(0.78);
-  margin: 0 !important;
-  border-radius: 0 !important;
-}
-.photo-hero-immersive .hero-cap {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: #fff;
-  padding: 24px;
-}
-.photo-hero-immersive .hero-cap h1 {
-  font-family: var(--sans);
-  font-size: 4.6rem;
-  font-weight: var(--weight-light, 300);
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: #fff;
-  line-height: 1.02;
-  margin: 0;
-}
-.photo-hero-immersive .hero-cap .hero-sub {
-  font-family: var(--serif);
-  font-size: 1.7rem;
-  font-weight: var(--weight-light, 300);
-  color: rgba(255, 255, 255, 0.92);
-  margin: 16px 0 0;
-  max-width: 46ch;
-}
-.photo-hero-immersive .hero-cap .hero-cta {
-  font-family: var(--sans);
-  font-size: 1.05rem;
-  letter-spacing: 1.8px;
-  text-transform: uppercase;
-  color: #fff;
-  margin-top: 22px;
-  padding-bottom: 3px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.55);
-  text-decoration: none;
-  transition: border-color 0.2s ease;
-}
-.photo-hero-immersive .hero-cap .hero-cta:hover { border-color: #fff; }
-
-/* Captions estilo museo: reveladas al pasar el cursor sobre cada foto */
-.masonry-grid li a { position: relative; }
-.masonry-grid .photo-overlay {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 40px 16px 16px;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.74));
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-.masonry-grid li a:hover .photo-overlay { opacity: 1; }
-.masonry-grid .photo-overlay .photo-caption {
-  font-family: var(--serif);
-  font-size: 1.25rem;
-  font-weight: var(--weight-light, 300);
-  line-height: 1.4;
-  color: #fff;
-  margin: 0 0 6px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.masonry-grid .photo-overlay .photo-meta-line {
-  font-family: var(--sans);
-  font-size: 0.9rem;
-  font-weight: var(--weight-normal, 400);
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.78);
-  display: block;
-}
-.masonry-grid .photo-overlay .photo-meta-line .photo-place { color: rgba(255, 255, 255, 0.92); }
-
-/* Táctil (sin hover): mostramos el caption de forma permanente y sutil */
-@media (hover: none) {
-  .masonry-grid .photo-overlay {
-    opacity: 1;
-    background: linear-gradient(transparent 45%, rgba(0, 0, 0, 0.66));
-    padding-top: 56px;
-  }
 }
 
 /* === Apple "museo": captions al hover sobre cada foto ===
@@ -960,20 +844,6 @@ def render_collection_page(coll: dict, items: list[dict]) -> str:
     return body
 
 
-def photo_hero_block(p: dict) -> str:
-    """Hero inmersivo full-bleed (mock Apple): primera foto oscurecida con
-    título en D-DIN mayúsculas + CTA teal hacia la galería."""
-    return f"""<section class="photo-hero-immersive" aria-label="Portada">
-  <img src="{esc(p['image_url'])}" alt="{esc(p['alt_text'])}" loading="eager">
-  <div class="hero-cap">
-    <h1>Fotografías</h1>
-    <p class="hero-sub">Un cuaderno visual entre umbrales: calle, ciudades, retratos y luz dorada.</p>
-    <a class="hero-cta" href="#galeria">Ver la galería &darr;</a>
-  </div>
-</section>
-"""
-
-
 def render_gallery(items: list[dict]) -> str:
     parts = []
     for p in items:
@@ -1052,12 +922,7 @@ def render_index_page(page: int, total_pages: int, page_items: list[dict],
     ]
 
     body = head(title, description, canonical, og_img, extra_jsonld=page_jsonld)
-    gallery_items = page_items
     if page == 1:
-        featured = page_items[0] if page_items else None
-        if featured:
-            gallery_items = page_items[1:]
-            body += photo_hero_block(featured)
         body += f"""<div class="page-intro">
   <p>Archivo curado de fotografías publicadas originalmente en Pixelfed: umbrales, calle, ciudades, retratos, cementerios y luz dorada; mi manera de mirar lo que está a punto de cambiar, desaparecer o quedarse un segundo más.</p>
 </div>
@@ -1069,7 +934,7 @@ def render_index_page(page: int, total_pages: int, page_items: list[dict],
     else:
         body += f'<h1 class="section-title">Archivo de fotos · página {page}</h1>\n'
 
-    body += render_gallery(gallery_items)
+    body += render_gallery(page_items)
     body += render_pagination(page, total_pages)
     body += f"""<div class="pixelfed-cta">
   <a href="{PIXELFED_USER_URL}" target="_blank" rel="noopener" class="btn-pixelfed">
