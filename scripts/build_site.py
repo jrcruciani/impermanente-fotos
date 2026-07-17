@@ -38,6 +38,8 @@ SITE_DOMAIN = "fotos.impermanente.es"
 SITE_URL = f"https://{SITE_DOMAIN}"
 PARENT_URL = "https://impermanente.es"
 PIXELFED_USER_URL = "https://pixelfed.social/HispaniaObscura"
+MASTODON_PROFILE_URL = "https://masto.impermanente.es/@jrcruciani"
+FEDIVERSE_CREATOR = "@jrcruciani@masto.impermanente.es"
 FAVICON_URL = "https://micro.blog/JRCruciani/favicon.png"
 AUTHOR_NAME = "J.R. Cruciani"
 AUTHOR_ID = "https://impermanente.es/about/#person"
@@ -423,6 +425,9 @@ body.photo-page main {
   width: auto !important;
   height: auto !important;
 }
+.photo-page .photo-figure {
+  margin: 0;
+}
 .photo-page .photo-text {
   font-family: var(--serif);
   font-size: 1.9rem;
@@ -557,13 +562,24 @@ window.wireboard('trackPageView', null, customContext);
 
 
 def head(title: str, description: str, canonical: str, og_image: str | None = None,
-        extra_jsonld: list[dict] | None = None, body_class: str = "") -> str:
+        extra_jsonld: list[dict] | None = None, body_class: str = "",
+        og_type: str = "website", og_image_alt: str | None = None,
+        published_time: str | None = None) -> str:
     jsonld_blocks = ""
     if extra_jsonld:
         for ld in extra_jsonld:
             jsonld_blocks += f'\n<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>'
     jsonld_blocks += f'\n<script type="application/ld+json">{json.dumps(jsonld_website(), ensure_ascii=False)}</script>'
-    og_img_tag = f'<meta property="og:image" content="{esc(og_image)}">' if og_image else ""
+    image_tags = ""
+    if og_image:
+        image_tags += f'<meta property="og:image" content="{esc(og_image)}">\n'
+        image_tags += f'<meta name="twitter:image" content="{esc(og_image)}">'
+        if og_image_alt:
+            image_tags += f'\n<meta property="og:image:alt" content="{esc(og_image_alt)}">'
+            image_tags += f'\n<meta name="twitter:image:alt" content="{esc(og_image_alt)}">'
+    article_tags = ""
+    if og_type == "article" and published_time:
+        article_tags = f'<meta property="article:published_time" content="{esc(published_time)}">'
     return f"""<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -587,23 +603,26 @@ def head(title: str, description: str, canonical: str, og_image: str | None = No
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(description)}">
 <meta property="og:url" content="{esc(canonical)}">
-<meta property="og:type" content="website">
+<meta property="og:type" content="{esc(og_type)}">
 <meta property="og:locale" content="es_ES">
 <meta property="og:site_name" content="impermanente — fotos">
-{og_img_tag}
+{image_tags}
+{article_tags}
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{esc(title)}">
 <meta name="twitter:description" content="{esc(description)}">
+<meta name="fediverse:creator" content="{FEDIVERSE_CREATOR}">
 <link rel="alternate" type="application/rss+xml" href="{PARENT_URL}/feed.xml" title="impermanente">
 <link rel="me" href="{PIXELFED_USER_URL}">
+<link rel="me" href="{MASTODON_PROFILE_URL}">
 <style>{CSS}</style>{jsonld_blocks}
 </head>
 <body class="{esc(body_class)}">
 <header class="header">
   <nav class="site-nav">
-    <h1 class="site-title"><a href="{PARENT_URL}/" class="u-url">
+    <div class="site-title"><a href="{PARENT_URL}/" class="u-url">
       <img src="https://avatars.micro.blog/avatars/2025/36/1810674.jpg" alt="" class="u-photo" id="avatar" width="28" height="28">impermanente
-    </a></h1>
+    </a></div>
     <ul class="nav-menu">
       <li class="nav-item"><a href="{PARENT_URL}/about/">Acerca de</a></li>
       <li class="nav-item"><a href="{PARENT_URL}/blog/">Blog</a></li>
@@ -738,7 +757,7 @@ def jsonld_person() -> dict:
         "knowsLanguage": ["es", "en"],
         "sameAs": [
             PIXELFED_USER_URL,
-            "https://masto.impermanente.es/@jrcruciani",
+            MASTODON_PROFILE_URL,
             "https://micro.blog/JRCruciani",
             "https://github.com/Jrcruciani",
         ],
@@ -830,7 +849,14 @@ def render_collection_page(coll: dict, items: list[dict]) -> str:
     elif coll.get("thumb_url"):
         og_img_url = coll["thumb_url"]
 
-    body = head(title, description[:200], canonical, og_img_url, extra_jsonld=page_jsonld)
+    body = head(
+        title,
+        description[:200],
+        canonical,
+        og_img_url,
+        extra_jsonld=page_jsonld,
+        og_image_alt=description,
+    )
     body += '<nav class="breadcrumb" aria-label="breadcrumb"><a href="/">Fotos</a> · <span>Colecciones</span> · <span>{}</span></nav>\n'.format(esc(coll["title"]))
     body += f'<h1 class="collection-title">{esc(coll["title"])}</h1>\n'
     if coll.get("description"):
@@ -921,9 +947,17 @@ def render_index_page(page: int, total_pages: int, page_items: list[dict],
         jsonld_imagegallery(page_items, canonical, title),
     ]
 
-    body = head(title, description, canonical, og_img, extra_jsonld=page_jsonld)
+    body = head(
+        title,
+        description,
+        canonical,
+        og_img,
+        extra_jsonld=page_jsonld,
+        og_image_alt=page_items[0]["alt_text"] if page_items else None,
+    )
     if page == 1:
-        body += f"""<div class="page-intro">
+        body += f"""<h1 class="visually-hidden">Fotografías de umbrales y vida cotidiana</h1>
+<div class="page-intro">
   <p>Archivo curado de fotografías publicadas originalmente en Pixelfed: umbrales, calle, ciudades, retratos, cementerios y luz dorada; mi manera de mirar lo que está a punto de cambiar, desaparecer o quedarse un segundo más.</p>
 </div>
 <hr class="section-divider" aria-hidden="true">
@@ -961,8 +995,17 @@ def render_photo_page(p: dict, prev_p: dict | None, next_p: dict | None) -> str:
         ]),
     ]
 
-    body = head(title, p["alt_text"][:200], canonical, p["image_url"],
-                extra_jsonld=page_jsonld, body_class="photo-page")
+    body = head(
+        title,
+        p["alt_text"][:200],
+        canonical,
+        p["image_url"],
+        extra_jsonld=page_jsonld,
+        body_class="photo-page",
+        og_type="article",
+        og_image_alt=p["alt_text"],
+        published_time=p.get("created_at"),
+    )
 
     width = p["meta"].get("width", "")
     height = p["meta"].get("height", "")
@@ -981,14 +1024,16 @@ def render_photo_page(p: dict, prev_p: dict | None, next_p: dict | None) -> str:
     body += f"""<article class="h-entry">
   <h1 class="p-name visually-hidden">{esc(title_short)}</h1>
   <a href="{esc(canonical)}" class="u-url visually-hidden" tabindex="-1" aria-hidden="true">Permalink</a>
-  <div class="photo-hero">
-    <a href="{esc(p['image_url'])}" rel="noopener">
-      <img src="{esc(p['image_url'])}" alt="{esc(p['alt_text'])}" loading="eager" class="u-photo"{dim_attrs}>
-    </a>
-  </div>
-  <div class="photo-text e-content">
-    {esc(p['alt_text'])}
-  </div>
+  <figure class="photo-figure">
+    <div class="photo-hero">
+      <a href="{esc(p['image_url'])}" rel="noopener">
+        <img src="{esc(p['image_url'])}" alt="{esc(p['alt_text'])}" loading="eager" class="u-photo"{dim_attrs}>
+      </a>
+    </div>
+    <figcaption class="photo-text e-content">
+      {esc(p['alt_text'])}
+    </figcaption>
+  </figure>
   <div class="photo-meta">
     {' · '.join(meta_bits)}
   </div>
@@ -1010,20 +1055,33 @@ def render_photo_page(p: dict, prev_p: dict | None, next_p: dict | None) -> str:
 def render_sitemap(items: list[dict], total_pages: int, collections: list[dict] | None = None) -> str:
     today = datetime.now(timezone.utc).date().isoformat()
     urls = [
-        (SITE_URL + "/", today, "weekly", "1.0"),
-        (SITE_URL + "/okf/", today, "weekly", "0.7"),
+        (SITE_URL + "/", today, "weekly", "1.0", None),
+        (SITE_URL + "/okf/", today, "weekly", "0.7", None),
     ]
     for n in range(2, total_pages + 1):
-        urls.append((f"{SITE_URL}/p/{n}/", today, "weekly", "0.7"))
+        urls.append((f"{SITE_URL}/p/{n}/", today, "weekly", "0.7", None))
     for c in (collections or []):
         if c.get("status_ids"):
             lastmod = (c.get("updated_at") or today)[:10]
-            urls.append((f"{SITE_URL}/coleccion/{c['slug']}/", lastmod, "weekly", "0.7"))
+            urls.append((f"{SITE_URL}/coleccion/{c['slug']}/", lastmod, "weekly", "0.7", None))
     for p in items:
-        urls.append((photo_url(p["status_id"]), (p.get("created_at") or today)[:10], "monthly", "0.6"))
-    body = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-    for url, lastmod, freq, prio in urls:
-        body += f'<url><loc>{esc(url)}</loc><lastmod>{lastmod}</lastmod><changefreq>{freq}</changefreq><priority>{prio}</priority></url>\n'
+        urls.append((
+            photo_url(p["status_id"]),
+            (p.get("created_at") or today)[:10],
+            "monthly",
+            "0.6",
+            p.get("image_url"),
+        ))
+    body = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+        'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n'
+    )
+    for url, lastmod, freq, prio, image_url in urls:
+        body += f'<url><loc>{esc(url)}</loc><lastmod>{lastmod}</lastmod><changefreq>{freq}</changefreq><priority>{prio}</priority>'
+        if image_url:
+            body += f'<image:image><image:loc>{esc(image_url)}</image:loc></image:image>'
+        body += '</url>\n'
     body += '</urlset>\n'
     return body
 
