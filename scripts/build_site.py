@@ -40,7 +40,10 @@ PARENT_URL = "https://impermanente.es"
 PIXELFED_USER_URL = "https://pixelfed.social/HispaniaObscura"
 MASTODON_PROFILE_URL = "https://masto.impermanente.es/@jrcruciani"
 FEDIVERSE_CREATOR = "@jrcruciani@masto.impermanente.es"
-FAVICON_URL = "https://micro.blog/JRCruciani/favicon.png"
+# El blog migró de Micro.blog a alojamiento propio; los recursos servidos
+# desde dominios de micro.blog desaparecen al cancelar la cuenta.
+AVATAR_URL = f"{PARENT_URL}/uploads/avatar.jpg"
+FAVICON_URL = AVATAR_URL
 AUTHOR_NAME = "J.R. Cruciani"
 AUTHOR_ID = "https://impermanente.es/about/#person"
 SERIES_ID = f"{SITE_URL}/#series"
@@ -621,7 +624,7 @@ def head(title: str, description: str, canonical: str, og_image: str | None = No
 <header class="header">
   <nav class="site-nav">
     <div class="site-title"><a href="{PARENT_URL}/" class="u-url">
-      <img src="https://avatars.micro.blog/avatars/2025/36/1810674.jpg" alt="" class="u-photo" id="avatar" width="28" height="28">impermanente
+      <img src="{AVATAR_URL}" alt="" class="u-photo" id="avatar" width="28" height="28">impermanente
     </a></div>
     <ul class="nav-menu">
       <li class="nav-item"><a href="{PARENT_URL}/about/">Acerca de</a></li>
@@ -752,7 +755,7 @@ def jsonld_person() -> dict:
         "name": AUTHOR_NAME,
         "alternateName": "JRCruciani",
         "url": "https://impermanente.es/about/",
-        "image": "https://avatars.micro.blog/avatars/2025/36/1810674.jpg",
+        "image": AVATAR_URL,
         "jobTitle": "Fotógrafo y escritor",
         "knowsLanguage": ["es", "en"],
         "sameAs": [
