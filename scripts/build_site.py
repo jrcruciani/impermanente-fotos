@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import re
 import shutil
 from pathlib import Path
 from datetime import datetime, timezone
@@ -99,9 +100,24 @@ def sort_collections(collections: list[dict]) -> list[dict]:
     return [collection for _, collection in sorted_with_index]
 
 
+def strip_html(s: str | None) -> str:
+    """Limpia el HTML que Pixelfed incrusta en content_text.
+
+    Pixelfed devuelve el caption con marcado (`<br />`, `<a href=...>`). Como
+    después se escapa con esc(), ese marcado acaba VISIBLE en la página como
+    `&lt;br /&gt;`. Verificado en producción 2026-08 en 5 fotos.
+    """
+    if not s:
+        return ""
+    t = re.sub(r"<br\s*/?>", "\n", s, flags=re.I)
+    t = re.sub(r"<[^>]+>", "", t)
+    t = html.unescape(t)
+    return re.sub(r"[ \t]+", " ", t).strip()
+
+
 def fallback_alt(content_text: str | None, place: dict | None) -> str:
     if content_text:
-        return content_text.strip()[:500]
+        return strip_html(content_text)[:500]
     if place and place.get("name"):
         return f"Foto en {place['name']}"
     return "Foto de Hispania Obscura"
@@ -157,7 +173,7 @@ def merge_records() -> list[dict]:
             "alt_is_real": alt_is_real,
             "place": r.get("place"),
             "created_at": r.get("created_at"),
-            "content_text": r.get("content_text") or "",
+            "content_text": strip_html(r.get("content_text")),
             "meta": r.get("meta") or {},
             "position_in_status": r.get("position_in_status", 0),
             "total_in_status": r.get("total_in_status", 1),
@@ -491,37 +507,30 @@ body.photo-page main {
   .section-title { font-size: 1.7rem; }
 }
 
-/* === Apple "museo": captions al hover sobre cada foto ===
+/* === Apple "museo": metadatos al hover sobre cada foto ===
    Layout portado del mock `appledin` (Apple + tipografía D-DIN de SpaceX).
    Reutiliza las variables heredadas del blog: --sans (D-DIN), --serif (Lora),
-   --weight-*, y el acento teal. */
+   --weight-*, y el acento teal.
 
-/* Captions estilo museo: reveladas al pasar el cursor sobre cada foto */
+   DECISIÓN (2026-08): el overlay muestra SOLO lugar y fecha. El alt-text no
+   se pinta encima de la foto porque la tapa; vive en el atributo `alt` (donde
+   lo leen lectores de pantalla y crawlers) y se lee completo en la página
+   individual de cada foto. */
+
+/* Metadatos estilo museo: revelados al pasar el cursor sobre cada foto */
 .masonry-grid li a { position: relative; }
 .masonry-grid .photo-overlay {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 40px 16px 16px;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.74));
+  padding: 28px 16px 14px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.68));
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
 .masonry-grid li a:hover .photo-overlay { opacity: 1; }
-.masonry-grid .photo-overlay .photo-caption {
-  font-family: var(--serif);
-  font-size: 1.25rem;
-  font-weight: var(--weight-light, 300);
-  line-height: 1.4;
-  color: #fff;
-  margin: 0 0 6px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
 .masonry-grid .photo-overlay .photo-meta-line {
   font-family: var(--sans);
   font-size: 0.9rem;
@@ -533,12 +542,12 @@ body.photo-page main {
 }
 .masonry-grid .photo-overlay .photo-meta-line .photo-place { color: rgba(255, 255, 255, 0.92); }
 
-/* Táctil (sin hover): mostramos el caption de forma permanente y sutil */
+/* Táctil (sin hover): mostramos los metadatos de forma permanente y sutil */
 @media (hover: none) {
   .masonry-grid .photo-overlay {
     opacity: 1;
-    background: linear-gradient(transparent 45%, rgba(0, 0, 0, 0.66));
-    padding-top: 56px;
+    background: linear-gradient(transparent 65%, rgba(0, 0, 0, 0.6));
+    padding-top: 40px;
   }
 }
 """
@@ -704,7 +713,7 @@ def jsonld_imageobject(p: dict) -> dict:
         "isPartOf": {"@id": SERIES_ID},
         "inLanguage": "es",
     }
-    caption = (p.get("content_text") or "").strip().split("\n")[0]
+    caption = strip_html(p.get("content_text")).split("\n")[0]
     if caption:
         node["caption"] = caption
     if p.get("created_at"):
@@ -879,7 +888,7 @@ def render_gallery(items: list[dict]) -> str:
         date = fmt_date_es(p.get("created_at"))
         date_iso = p.get("created_at") or ""
         place_str = fmt_place(p.get("place"))
-        entry_name = (p.get("content_text") or "").strip().split("\n")[0]
+        entry_name = strip_html(p.get("content_text")).split("\n")[0]
         if not entry_name:
             entry_name = p["alt_text"][:80].rstrip(",;:.")
 
@@ -898,12 +907,16 @@ def render_gallery(items: list[dict]) -> str:
         # Emitimos `class="loaded"` en <li> y `class="visible"` en <img>
         # para que el CSS del blog (photos-masonry.css) muestre la foto
         # inmediatamente sin esperar al JS de loading que el blog usa.
+        # La galería NO muestra caption sobre la foto: cualquier texto encima
+        # tapa la imagen. Solo lugar y fecha. El alt-text sigue íntegro en el
+        # atributo `alt` (lectores de pantalla, buscadores y LLMs lo leen) y se
+        # lee entero al abrir la página de la foto.
+        # `p-name` se mantiene oculto por microformats h-entry (no se ve).
         parts.append(f"""<li class="loaded h-entry">
   <a href="{esc(photo_url(p['status_id']))}" class="u-url">
     <img src="{esc(thumb_src)}" alt="{esc(p['alt_text'])}" loading="lazy" class="visible u-photo"{dim_attrs}>
-    <span class="p-name visually-hidden" aria-hidden="true">{esc(entry_name)}</span>
+    <span class="p-name visually-hidden">{esc(entry_name)}</span>
     <div class="photo-overlay" aria-hidden="true">
-      <p class="photo-caption">{esc(entry_name)}</p>
       {meta_line}
     </div>
   </a>
@@ -984,7 +997,7 @@ def render_index_page(page: int, total_pages: int, page_items: list[dict],
 
 
 def render_photo_page(p: dict, prev_p: dict | None, next_p: dict | None) -> str:
-    title_short = (p.get("content_text") or "").strip().split("\n")[0]
+    title_short = strip_html(p.get("content_text")).split("\n")[0]
     if not title_short:
         title_short = p["alt_text"][:80].rstrip(",;:.")
     title = f"{title_short} | impermanente"
