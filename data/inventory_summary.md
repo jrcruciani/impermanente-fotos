@@ -2,16 +2,15 @@
 
 - Total statuses: 178
 - Total media_attachments (image): 178
-- Pendientes de alt-text: 1
+- Pendientes de alt-text: 0
 - En posts multi-attachment: 0
 - Imágenes descargadas correctamente: 178
 - Imágenes que fallaron: 0
 
 ## Distribución temporal (pendientes)
 
-- 2026-08: 1
 
 ## Cobertura de `place`
 
-- Con `place.name`: 1
+- Con `place.name`: 0
 - Sin `place`: 0
