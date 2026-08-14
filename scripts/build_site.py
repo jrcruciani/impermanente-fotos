@@ -1115,8 +1115,8 @@ def render_llms_txt(items: list[dict], collections: list[dict] | None = None) ->
         "",
         f"> Galería estática de la obra fotográfica de {AUTHOR_NAME} (@HispaniaObscura en "
         "Pixelfed): umbrales, calle, ciudades, retrato, cementerios y golden hour. Cada "
-        "fotografía lleva un alt-text evocativo en la voz del autor, pensado para ser legible "
-        "por personas y por modelos de lenguaje. Español, licencia Creative Commons Attribution 4.0.",
+        "fotografía lleva un alt-text breve y específico, pensado para lectores de pantalla, "
+        "buscadores y modelos de lenguaje. Español, licencia Creative Commons Attribution 4.0.",
         "",
         f"Sitio hermano del cuaderno {PARENT_URL} (que tiene su propio llms.txt). Aquí vive "
         "exclusivamente el archivo fotográfico, renderizado como HTML estático (sin JavaScript "
@@ -1154,11 +1154,11 @@ def render_llms_txt(items: list[dict], collections: list[dict] | None = None) ->
         "",
         "## Sobre el alt-text",
         "",
-        "El texto alternativo de cada foto no es una descripción neutra: es una lectura breve "
-        "y evocativa en la voz del autor (mono no aware, la atención a lo que está a punto de "
-        "desaparecer). Se sirve por triplicado —atributo `alt` de la imagen, prosa visible bajo "
-        "la foto y campo `description` del JSON-LD `ImageObject`— para que cualquier agente lo "
-        "encuentre sin ejecutar JavaScript.",
+        "El texto alternativo de cada foto es una descripción factual, breve y específica del "
+        "sujeto, la acción o disposición y el detalle visual que distingue la escena. Se sirve "
+        "por triplicado —atributo `alt` de la imagen, prosa visible bajo la foto y campo "
+        "`description` del JSON-LD `ImageObject`— para que cualquier agente lo encuentre sin "
+        "ejecutar JavaScript.",
         "",
         f"## Más sobre {AUTHOR_NAME}",
         "",

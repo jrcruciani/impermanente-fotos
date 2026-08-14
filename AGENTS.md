@@ -6,7 +6,7 @@
 
 ## 0. Contexto del proyecto en una pantalla
 
-**Objetivo:** que las fotos de [`@HispaniaObscura` en Pixelfed](https://pixelfed.social/HispaniaObscura) tengan **alt-text evocativo** (no solo descriptivo) en la voz de J.R. Cruciani, indexable por crawlers/LLMs.
+**Objetivo:** que las fotos de [`@HispaniaObscura` en Pixelfed](https://pixelfed.social/HispaniaObscura) tengan **alt-text breve, específico y accesible**, útil para lectores de pantalla y buscadores.
 
 **Pipeline:**
 ```
@@ -99,10 +99,10 @@ Para cada pendiente:
 1. **Ver la imagen** con la herramienta `view` (path en `data/images_cache/`).
 2. **Aplicar style guide** (`style-guide/STYLE_GUIDE.md`) y MASTER_PROMPT (`prompt/MASTER_PROMPT.md`).
 3. **Estructura del alt-text:**
-   - 200–500 chars (target ~300)
-   - Anclaje visual concreto → gesto/tensión → eco breve no solemne
-   - **CERO nombres geográficos** (sí permitido nombrar objetos/edificios genéricamente: "centro comercial", "palacio fortificado", "puente colgante")
-   - Voz JR: aforismo + matiz, observacional, sin pose
+   - Una oración de 10–20 palabras; máximo 25
+   - Sujeto concreto → acción o disposición → entorno o detalle distintivo
+   - Usar `place.name` solo cuando aporte contexto útil
+   - Sin lirismo, metáforas, interpretación ni introducciones como "foto de"
 4. **Validación local con `qa.py`** antes de añadir:
    ```python
    from scripts.qa import qa_check
@@ -176,25 +176,20 @@ curl -s "https://fotos.impermanente.es/feed.json?cb=$(date +%s)" | \
 Resumen ejecutable. Detalle en `style-guide/STYLE_GUIDE.md`.
 
 ### Estructura
-1. **Anclaje visual concreto** (1–2 frases) — qué hay, cómo está dispuesto, paleta/luz si añade.
-2. **Gesto / tensión / dirección** — la cosa que el ojo persigue, no decorativa.
-3. **Eco breve no solemne** — máximo 1 término-marca o ninguno; preferible un giro coloquial de cierre.
+Una sola oración: **sujeto concreto + acción o disposición + entorno o detalle distintivo**.
+Objetivo de 10–20 palabras y máximo absoluto de 25.
 
 ### Blacklist (rechaza `qa.py`)
 `captura/captur*`, `muestra*`, `retrato*` (como verbo), `plasma*`, `congela*`, `evoca*`, `mágico*`, `único*`, `especial*`, `increíble*`, `impactante*`, `hermoso/bello*`, `espectacular*`, `impresionante*`, `esta imagen`, `en esta fotografía`, `una toma que`, `la fotografía nos/invita/captura`, `este momento`, `para siempre`, `el alma de`, `la esencia de`, `atrapar el instante`, **emojis**, **exclamaciones**.
 
 Sustitutos para "única": *mejor, principal, más honesta/fiel/limpia*.
 
-### Términos-marca (máx 1 por alt-text, mejor ninguno)
-*umbral, mono no aware (物の哀れ), impermanencia, anicca, polytropos*.
-
-### Verbos suyos (preferidos)
-*enfocar, triangular, encajar, atravesar, ceder, contemplar, revisar, expulsar, apoyarse, aparecer*.
-
 ### Reglas extra
-- **CERO nombres geográficos** (la ubicación va en el campo `place` aparte).
-- **Identificación de objetos sí permitida** ("Coliseo", "Big Ben", "Aljafería como palacio fortificado") — pero ojo, mejor descriptivo si el objeto es local.
-- Longitud target: 200–500 chars. Avg histórico: 309. Min 192, Max 418.
+- Incluir el lugar cuando `place.name` aporte contexto.
+- Identificar monumentos solo cuando la identificación sea fiable.
+- Cada texto debe ser único, factual y verificable en la imagen.
+- No repetir pies de foto ni rellenar con palabras clave.
+- El antiguo léxico artístico (`impermanencia`, `mono no aware`, etc.) queda prohibido.
 
 ---
 
@@ -283,7 +278,7 @@ python3 -m pytest tests/test_okf.py -q
 
 **Jobs:**
 1. `fetch-and-publish`: `fetch_inventory.py` → si hay diff en `data/`, commit con `github-actions[bot]` y push.
-   - **Ojo:** este job **NO genera alt-text** (no tiene LLM-vision). Solo refresca metadata + descarga imágenes nuevas. Si JR sube una foto sin alt, aparecerá en `fotos.impermanente.es` con caption pero **sin alt evocativo**.
+   - **Ojo:** este job **NO genera alt-text** (no tiene LLM-vision). Solo refresca metadata + descarga imágenes nuevas. Si JR sube una foto sin alt, aparecerá en `fotos.impermanente.es` con caption pero sin descripción accesible.
 2. `build-and-deploy`: `build_site.py` → push a branch `gh-pages` → GitHub Pages sirve.
 
 **Trigger manual:**
@@ -295,7 +290,7 @@ gh workflow run build.yml --repo Jrcruciani/impermanente-fotos
 - Best case: ~10 min (cron + build + CDN cache 600s)
 - Worst case: ~12h 10 min (justo después de un cron)
 - Avg: ~6h
-- Para alt-text evocativo: requiere sesión manual (§3).
+- Para alt-text accesible: requiere sesión manual (§3).
 
 ---
 
@@ -355,12 +350,12 @@ Snapshot canónico de Pixelfed. Una línea = un media_attachment.
 ```
 
 ### `data/generated.jsonl` (154 records)
-Alt-texts generados con QA. Source de verdad para `publish.py`.
+Alt-texts descriptivos generados con QA. Source de verdad para `publish.py`.
 ```json
 {
   "media_id": "...",
   "status_id": "...",
-  "alt_text": "Texto evocativo...",
+  "alt_text": "Descripción breve y específica...",
   "qa_status": "passed",
   "qa_issues": [],
   "batch": "BATCH_NAME",

@@ -1,13 +1,13 @@
 # impermanente-fotos
 
-Pipeline para generar y publicar **alt-text evocativo** en las fotos de [@HispaniaObscura en Pixelfed](https://pixelfed.social/HispaniaObscura), y servir un sitio estático rico crawlable en [`fotos.impermanente.es`](https://fotos.impermanente.es/).
+Pipeline para generar y publicar **alt-text breve, específico y accesible** en las fotos de [@HispaniaObscura en Pixelfed](https://pixelfed.social/HispaniaObscura), y servir un sitio estático crawlable en [`fotos.impermanente.es`](https://fotos.impermanente.es/).
 
 > 🤖 **Para asistentes IA / sesiones futuras:** leer **[AGENTS.md](./AGENTS.md)** primero. Ahí está el runbook operativo completo (qué hacer cuando JR sube fotos nuevas, quirks de Pixelfed, troubleshooting, anatomía de los datos).
 
 ## ¿Qué hace?
 
 1. **Lee Pixelfed** y construye un inventario de cada foto (`scripts/fetch_inventory.py`).
-2. **Genera alt-text** descriptivo + evocativo para cada foto sin descripción, aplicando un style guide y QA automático.
+2. **Genera alt-text** factual para cada foto, normalmente en 10–20 palabras, aplicando un style guide y QA automático.
 3. **Publica** los alt-texts en Pixelfed via `PUT /api/v1/media/:id` con read-after-write (`scripts/publish.py`).
 4. **Construye un sitio estático** con todas las fotos paginadas, JSON-LD por foto, sitemap, robots y bundle OKF (`scripts/build_site.py`). Hereda directamente el theme visual del blog (`https://impermanente.es/custom.css`) para verse igual que `impermanente.es`.
 5. **Despliega** a GitHub Pages → `fotos.impermanente.es`. El menú "Fotos" del blog en micro.blog hace meta-refresh hacia este sitio.

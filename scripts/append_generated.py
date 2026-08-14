@@ -3,6 +3,7 @@
 Uso:
     python scripts/append_generated.py BATCH_ID < records.json
     python scripts/append_generated.py BATCH_ID --records '[{...},{...}]'
+    python scripts/append_generated.py BATCH_ID --replace-all < records.json
 
 Cada record requiere: media_id, alt_text. Opcional: status_id, created_at, model.
 
@@ -51,6 +52,7 @@ def main() -> None:
     if len(sys.argv) < 2:
         sys.exit("uso: python scripts/append_generated.py BATCH_ID [--records JSON]")
     batch_id = sys.argv[1]
+    replace_all = "--replace-all" in sys.argv
     if "--records" in sys.argv:
         idx = sys.argv.index("--records")
         new_records = json.loads(sys.argv[idx + 1])
@@ -61,7 +63,7 @@ def main() -> None:
         sys.exit("records debe ser una lista de objetos")
 
     now = dt.datetime.now(dt.timezone.utc).isoformat()
-    existing = load_existing()
+    existing = {} if replace_all else load_existing()
     overwritten = 0
     passed = 0
     failed = 0
