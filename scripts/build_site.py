@@ -974,7 +974,8 @@ def render_index_page(page: int, total_pages: int, page_items: list[dict],
     if page == 1:
         body += f"""<h1 class="visually-hidden">Fotografías de umbrales y vida cotidiana</h1>
 <div class="page-intro">
-  <p>Archivo curado de fotografías publicadas originalmente en Pixelfed: umbrales, calle, ciudades, retratos, cementerios y luz dorada; mi manera de mirar lo que está a punto de cambiar, desaparecer o quedarse un segundo más.</p>
+  <p>Archivo curado de fotografías como forma de espiritualidad, una empatía con lo efímero, una inútil lucha contra la impermanencia (物の哀れ).</p>
+  <p>Capturadas mayormente con una Fujifilm X-E5 o una Fujifilm X100VI, pero en ocasiones con el iPhone que tenga a la mano.</p>
 </div>
 <hr class="section-divider" aria-hidden="true">
 """
