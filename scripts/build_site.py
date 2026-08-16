@@ -216,9 +216,9 @@ main {
   padding: 60px var(--gutter, 24px) 40px;
 }
 
-/* Texto introductorio centrado, en serif del blog */
+/* Texto introductorio alineado a la izquierda, en serif del blog */
 .page-intro {
-  text-align: center;
+  text-align: left;
   max-width: var(--text-width, 620px);
   margin: 0 auto 30px;
 }
@@ -230,7 +230,10 @@ main {
   letter-spacing: 0.3px;
   color: var(--text);
   max-width: var(--text-width, 620px);
-  margin: 0 auto;
+  margin: 0 auto 1.1em;
+}
+.page-intro p:last-child {
+  margin-bottom: 0;
 }
 
 .section-divider {
@@ -688,7 +691,7 @@ def jsonld_website() -> dict:
         "@id": SITE_URL + "/#website",
         "url": SITE_URL + "/",
         "name": "impermanente — fotos",
-        "description": "Galería estática de fotografías de J.R. Cruciani publicadas originalmente en Pixelfed.",
+        "description": "Archivo curado de fotografías de J.R. Cruciani como forma de espiritualidad: una empatía con lo efímero, una inútil lucha contra la impermanencia (物の哀れ).",
         "inLanguage": "es",
         "author": {"@id": AUTHOR_ID},
         "publisher": {"@id": AUTHOR_ID},
@@ -949,7 +952,7 @@ def render_index_page(page: int, total_pages: int, page_items: list[dict],
                       include_collections: bool, collections: list[dict] | None = None) -> str:
     if page == 1:
         title = "Fotos | impermanente"
-        description = "Fotografías de umbrales, calle, ciudades, retratos, cementerios y luz dorada: mi manera de mirar lo que está a punto de cambiar, desaparecer o quedarse un segundo más."
+        description = "Archivo curado de fotografías como forma de espiritualidad, una empatía con lo efímero, una inútil lucha contra la impermanencia (物の哀れ). Umbrales, calle, ciudades, retratos, cementerios y luz dorada, capturados mayormente con una Fujifilm X-E5 o una Fujifilm X100VI."
         canonical = SITE_URL + "/"
     else:
         title = f"Fotos · página {page} | impermanente"
