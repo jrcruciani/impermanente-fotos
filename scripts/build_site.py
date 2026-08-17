@@ -56,7 +56,7 @@ COLLECTION_ORDER = [
     "oubal",
     "por-la-calle",
     "dorado",
-    "psicopompo",
+    "contrapunto",
 ]
 
 # Descripciones curadas por colección (las del campo `description` en
@@ -67,7 +67,7 @@ COLLECTION_BLURBS = {
     "oubal": "serie íntima dedicada a Valeria. Retrato cotidiano y libre.",
     "por-la-calle": "fotografía de calle. Gestos, escenas y personas en lo cotidiano urbano.",
     "dorado": "puestas de sol y golden hour. La luz que cierra el día.",
-    "psicopompo": "tanatoturismo y patrimonio funerario. Cementerios históricos de Europa y otras geografías, escultura sepulcral y simbología de la muerte.",
+    "contrapunto": "en curso.",
 }
 
 

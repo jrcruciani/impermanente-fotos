@@ -68,7 +68,7 @@ jobs:
       - name: Detect changes in data/
         id: detect
         run: |
-          if git diff --quiet --exit-code data/inventory.jsonl data/published.jsonl 2>/dev/null; then
+          if git diff --quiet --exit-code data/inventory.jsonl data/published.jsonl data/collections.jsonl 2>/dev/null; then
             echo "changed=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
