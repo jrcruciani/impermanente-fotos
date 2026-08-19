@@ -8,9 +8,11 @@ on:
       - 'data/**'
       - '.github/workflows/build.yml'
   workflow_dispatch:
-  schedule:
-    # Cada 12 horas: detecta fotos nuevas y rebuild + deploy.
-    - cron: '17 */12 * * *'
+  # DESACTIVADO 2026-08-19: fotos.impermanente.es se sirve ya desde el VPS
+  # (Caddy, /srv/fotos). Este workflow solo publicaba a gh-pages, que ya nadie
+  # lee. Se conserva el repo y la rama gh-pages como rollback.
+  # schedule:
+  #   - cron: '17 */12 * * *'
 
 permissions:
   contents: write
